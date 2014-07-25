@@ -1,0 +1,522 @@
+
+Day 3 - 23/07/2014
+
+
+case ..... esac
+
+case $ choice in
+
+1) 	stmt1
+ 	stmt2
+	;;
+
+
+2) 	stmt1
+	stmt2
+
+*) 	stmt1
+	stmt2
+
+esac
+
+
+
+Example: 1)
+
+  1 # case demo script
+  2 # For running this program
+  3 # chmod +x demosrc_case
+  4 # ./demosrc_case
+  5
+  6
+  7 clear
+  8
+  9 read -p "Enter Answer (y/n)" ans
+ 10
+ 11 case $ans in
+ 12 'y'|'yes'|'Y'|'YES'|'Yes') echo "Your Answer is 'yes'"
+ 13         ;;
+ 14 'n') echo "Your Answer is 'no'"
+ 15         ;;
+ 16 *) echo "wrong answer"
+ 17 esac
+ 18
+ 19 echo "case script demo over"
+
+
+
+Example: 2)
+
+    # case_menu display demo script:
+  2 # For running this program
+  3 # chmod +x demosrc_case_menu
+  4 # ./demosrc_case_menu
+  5
+  6
+  7 clear
+  8
+  9 read -p "Enter File Name : " fname
+ 10
+ 11 echo -e "\n\t\t1.Display Contents\n\t\t2.Conunt lines\n\t\t3.FAP\n\t\t4.Exit"
+ 12 read -p "Enter Choice (1/2/3/4)" choice
+ 13
+ 14 case $choice in
+ 15 1) echo "Contains of $fname"
+ 16         cat $fname
+ 17         ;;
+ 18 2) echo -e "Total no. of lines in file - $fname : \c"
+ 19         wc -l < $fname
+ 20         ;;
+ 21 3) echo -e "File acess permisions for $fname : \c "
+ 22         ls -l $fname | tr -s " " | cut -d " " -f1
+ 23         ;;
+ 24 4) exit
+ 25         ;;
+ 26 *) echo "wrong answer"
+ 27 esac
+ 28
+ 29 echo "case script demo over"
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Loop Statements:
+----------------
+
+while true
+do 
+	
+	---
+	---
+	---	exit
+done
+
+
+
+-z is result variable is NULL
+
+
+
+while true
+do
+	
+
+1)
+
+  1 # case demo script
+  2 # For running this program
+  3 # chmod +x demosrc_case_menu_with_loop
+  4 # ./demosrc_case_menu_with_loop
+  5
+  6
+  7 clear
+  8
+  9 read -p "Enter File Name : " fname
+ 10
+ 11 while true
+ 12 do
+ 13         clear
+ 14 echo -e "\n\t\t1.Display Contents\n\t\t2.Conunt lines\n\t\t3.FAP\n\t\t4.Exit"
+ 15 read -p "Enter Choice (1/2/3/4)" choice
+ 16
+ 17 case $choice in
+ 18 1) echo "Contains of $fname"
+ 19         cat $fname
+ 20         ;;
+ 21 2) echo -e "Total no. of lines in file - $fname : \c"
+ 22         wc -l < $fname
+ 23         ;;
+ 24 3) echo -e "File acess permisions for $fname : \c "
+ 25         ls -l $fname | tr -s " " | cut -d " " -f1
+ 26         ;;
+ 27 4) exit
+ 28         ;;
+ 29 *) echo "wrong answer"
+ 30 esac
+
+
+
+
+
+
+
+
+
+
+2)
+
+# demo for accept proper name from use
+  2 # for running this prog
+  3 # chmod +x demosrc_accept_proper_name
+  4 # ./ demosrc_accept_proper_name
+  5
+  6 clear
+  7
+  8 while true
+  9 do
+ 10         read -p "Enter name : " name
+ 11         res=`echo $name | egrep -c "^[a-z]+$"`
+ 12         if [ $res -gt 0 ]
+ 13         then
+ 14                 break
+ 15         else
+ 16                 read -p "Enter alphabets only ..."
+ 17         fi
+ 18 done
+
+
+	res = `echo $
+
+	
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+* while with some conditions:
+
+no=1
+while [ $no -lt 11 ]
+do 
+	echo $no
+	no=`expr $no+1`
+done
+
+1)
+
+  1 # case demo script
+  2 # For running this program
+  3 # chmod +x demosrc_while_with_conditions
+  4 # ./demosrc_while_with_conditions
+  5
+  6
+  7 clear
+  8
+  9 no=1
+ 10
+ 11 while [ $no -lt 11 ]
+ 12 do
+ 13         echo $no
+ 14         no=`expr $no + 1`
+ 15 done
+ 16
+
+
+2)
+1 # case demo script for display greeting message with loop
+  2 # For running this program
+  3 # chmod +x demosrc_while_with_condition_message
+  4 # ./demosrc_while_with_condition_message
+  5
+  6
+  7 clear
+  8
+  9 ans='yes'
+ 10
+ 11 while [ $ans != 'no' ]
+ 12 do
+ 13         echo "welcome"
+ 14         read -p "Wish to continue? (yes/no)" ans
+ 15 done
+
+
+
+
+3)
+while true
+ 10 do
+ 11
+ 12         read -p "Enter emp no." emp_no
+ 13         res_emp_no=`echo $emp_no | egrep -c "^[0-9]+$"`
+ 14         emp_no_length=`expr length $emp_no`
+ 15         if [ $res_emp_no -gt 0 -a $emp_no_length -eq 2 ]
+ 16         then
+ 17                 echo -p "Saving data to file "
+ 18                 `echo $emp_no > validated_employee_data`
+ 19            break
+ 20
+ 21         else
+ 22                 echo -p "Enter emp no is number with 2 digits"
+ 23         fi
+ 24 done
+
+
+
+
+
+EXERSICE :Write a script to aceept employee code, name & salary of an employee. Scipr should validate the code to check that it contains digits only with minimun as 2. It should validate name to check lenghth is not above 20 & has aplphabets only.Salary should be numeric and should not be below 10000.
+After accepting valid data , store it in the file employee.
+
+
+
+
+# case demo script for validating employee data
+  2
+  3 # :::::::::::::Exercise ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  4 # Write a script to aceept employee code, name & salary of an employee.
+  5 # Scipr should validate the code to check that it contains digits only with minimun as 2.
+  6 # It should validate name to check lenghth is not above 20 & has aplphabets only.
+  7 # Salary should be numeric and should not be below 10000.
+  8 # After accepting valid data , store it in the file employee.
+  9 # :::::::::::::Exercise ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ 10
+ 11 # For running this program
+ 12 # chmod +x demosrc_employee_validate_data
+ 13 # ./demosrc_employee_validate_data
+ 14
+ 15 ## TODO Need to modify that 1. Accept file name where you want to save validated data .
+ 16 ##                          2. Write data once in file (currently it written more places).
+ 17 ##                          3. Need to give provision that user can accept emp_no,emp_name,emp_sa    l 3 times
+ 18
+ 19 clear
+ 20
+ 21 while true
+ 22 do
+ 23
+ 24         read -p "Enter emp no. " emp_no
+ 25         res_emp_no=`echo $emp_no | egrep -c "^[0-9]+$"`
+ 26         emp_no_length=`expr length $emp_no`
+ 27         if [ $res_emp_no -gt 0 -a $emp_no_length -eq 2 ]
+ 28         then
+ 29                 echo -p "Saving data to file "
+ 30 `echo $emp_no >> validated_employee_data`
+ 31            break
+ 32
+ 33         else
+ 34                 echo -p "Enter emp no is number with 2 digits"
+ 35         fi
+ 36 done
+ 37
+ 38
+ 39
+ 40
+ 41 while true
+ 42  do
+ 43
+ 44          read -p "Enter emp name. " emp_name
+ 45          res_emp_name=`echo $emp_name | egrep -c "^[a-z]+$"`
+ 46          emp_name_length=`expr length $emp_name`
+ 47           if [ $res_emp_name -gt 0 -a $emp_name_length -eq 5 ]
+ 48           then
+ 49                   echo -p "Saving emp name data to file "
+ 50                   `echo $emp_name >> validated_employee_data`
+ 51              break
+ 52
+ 53           else
+ 54                   echo -p "Enter emp name is not valid alphabet and length not 5"
+ 55           fi
+ 56   done
+ 57
+ 58
+ 59 while true
+ 60 do
+ 61
+ 62           read -p "Enter emp sal" emp_sal
+ 63           res_emp_sal=`echo $emp_sal | egrep -c "^[0-9]+$"`
+ 64           if [ $res_emp_sal -gt 0 -a $emp_sal -lt 10000 ]
+ 65           then
+ 66                   echo -p "Saving emp sal data to file "
+ 67                   `echo $emp_sal >> validated_employee_data`
+ 68              break
+ 69
+ 70           else
+ 71                   echo -p "Enter emp sal should be less than 10000"
+ 72           fi
+ 73   done
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+for Loop
+
+for no in 10 20 30
+
+do 
+	echo $no
+	sum='expr $sum + $no'
+done
+
+
+
+
+ # demosrc_for_loop -- for showing contains of file which are given in for loop
+  2
+  3 clear
+  4
+  5 for  fname in demoscr demoscr1
+  6 do
+  7         sum="Contents of files $fname"
+  8         cat $fname
+  9 done
+
+
+
+find:-
+--------
+
+find -type  f (regular file)
+
+-maxdepth 1  (parent)
+	 2  (parent )
+	 3 
+
+-perm 644
+
+-size 0c (zero byte files)
+
+-mtime (modified time file)
+
+-ok (in order to perform any action on found files) 
+-exec
+
+
+
+
+
+[bs15@qeserver scripts]$ find .
+.
+./demosrc_case_menu_with_loop
+./demosrc_for_loop
+./demosrc_while_with_conditions_message
+./demosrc_accept_proper_input
+./validated_employee_data
+./demosrc_for_loop1
+./demosrc_case_menu
+./demoscr
+./demoscr1
+./demosrc_case
+./employee
+./demosrc_while_with_conditions
+./demosrc_employee_data_validation
+./demoscr3
+[bs15@qeserver scripts]$
+
+
+
+[bs15@qeserver scripts]$ find . -type f
+./demosrc_case_menu_with_loop
+./demosrc_for_loop
+./demosrc_while_with_conditions_message
+./demosrc_accept_proper_input
+./validated_employee_data
+./demosrc_for_loop1
+./demosrc_case_menu
+./demoscr
+./demoscr1
+./demosrc_case
+./employee
+./demosrc_while_with_conditions
+./demosrc_employee_data_validation
+./demoscr3
+[bs15@qeserver scripts]$
+
+
+[bs15@qeserver scripts]$ find . -type d
+.
+[bs15@qeserver scripts]$ mkdir sample
+[bs15@qeserver scripts]$ find . -type d
+.
+./sample
+[bs15@qeserver scripts]$
+
+
+
+[bs15@qeserver ~]$ find -maxdepth 1
+.
+./.bashrc
+./.mozilla
+./.emacs
+./.test.swp
+./.bash_logout
+./test_dir
+./.exrc
+./.bash_history
+./.bash_profile
+./.zshrc
+./.kde
+./.viminfo
+[bs15@qeserver ~]$
+
+
+
+
+[bs15@qeserver ~]$ find . -type f -size 0c
+./test_dir/errorlog
+./test_dir/extract_file1employee_information
+[bs15@qeserver ~]$
+
+
+[bs15@qeserver ~]$ find . -type f -size 0c -ok rm {} \;
+< rm ... ./test_dir/errorlog > ? n
+< rm ... ./test_dir/extract_file1employee_information > ? n
+[bs15@qeserver ~]$
+
+
+
+Positional Parameters / Command Line Argument:
+
+./ demosrc arg1 arg2
+
+$0 -- demosrc
+$1 -- arg1
+$2 -- arg2
+
+
+
+ 1 clear
+  2
+  3 if [ $# -ne 1 ]
+  4 then
+  5         echo "Wrong no. of arguments"
+  6         exit
+  7 fi
+  8
+  9 if [ -f  $1 ]
+ 10 then
+ 11         echo  "$1 exists"
+ 12 else
+ 13         echo "$1 does not exist"
+ 14 fi
+
+
+
+
+########### TODO (need to complte this program)
+
+./copyfiles dir f1 f2 f3
+
+
+          echo  "$1 exists"
+ 12  else
+ 13           echo "$1 does not exist"
+ 14  fi
+ 15 #echo $@
+ 16
+ 17 #dir=$1
+ 18 #shift
+ 19 #cp $@ $dir
+ 20
+ 21 #dir=$1
+ 22 cnt=0
+ 23 for fname in $@
+ 24 do
+ 25         if [ -f $fname ]
+ 26         then
+ 27                 cp $fname $dir
+ 28                 cnt=`expr $cnt +1 `
+ 29         fi
+ 30 done
+ 31
+ 32 # 3rd way ..
+ 33
+ 34 dir=$1
+ 35 while [ ## -gt 0]
+ 36 do
+ 37         if [ -f $1 ]
+ 38         then
+ 39                 cp $1  $dir
+ 40         fi
+
+
+
+
+

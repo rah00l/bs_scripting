@@ -1,0 +1,323 @@
+Commands take INPUT but not give OUTPUT 
+chfn 
+passwd
+read
+
+
+Commands do Not take INPUT but give OUTPUT 
+ls 
+finger
+date
+pwd
+top
+ps
+uname
+top
+more
+less
+who
+whomi
+
+
+
+
+Commands take INPUT and give OUTPUT 
+cat
+head
+tail
+wc
+sort
+grep
+
+
+
+
+Commands do not take INPUT not give OUTPUT 
+set
+chmod
+mkdir
+cp 
+mv
+rm
+rmdir
+
+
+Filters:
+----------
+
+cat -n employee (display with numbers on cmd)
+
+more /etc/password (b-backword , f-forward) 	
+less /etc/password (b-backword , f-forward) 	
+
+
+head /etc/password (by default 10 line)
+
+head 5 /etc/password 
+
+head -5 /etc/password 
+
+tail 5 /etc/password
+
+
+tail -5 /etc/password 
+
+
+
+
+wc employee 
+
+line words characters 
+
+wc file1 file2
+
+wc -l < employee
+
+wc -lc < employee
+
+wc -wlc < employee
+
+
+EXERCISE 1 Command Piping: Inter process commands:
+-------------------------------------------
+Get count of number of users loged in:
+1.	who > file1
+	wc -l < file1
+
+2.	Pipe (No need to create temp file)
+	who | wc -l
+
+-------------------------------------------
+
+Requires 2 commands just like (sender <--> receiver)
+
+
+
+
+file employee
+
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+e001:anil:lead:20000
+e0016:harshal:prog:56000
+
+
+
+
+
+cut -d":" -f2,4 employee    (d is delimeter in file , -f column number)
+cut -d":" -f2-4 employee    (range 2-4)
+
+cut -d":" -f1 employee
+
+cut -d":" -f1 employee | cut -c2-
+
+
+EXERCISE 2 - Get user name from pwd command
+-------------------------------------------
+1. pwd | cut -d"/" -f3
+
+2. pwd | cut -c7-10
+
+
+-------------------------------------------
+
+
+EXERCISE 3 - Get username and time out of who command output
+-------------------------------------------
+who | tr -s " "  | cut -d " " -f1,4
+
+-------------------------------------------
+
+
+
+
+
+
+tr ":" "-" < employee  (Translate : to -)
+
+
+tr "[a-z]" "[A-Z]" < employee
+
+
+tr -d "e" < employee (-d delete)
+
+who | tr -s " "  (-s squezee)
+
+
+
+
+-------------------------------------------
+EXERCISE 4 - Cut permission and file name column from ls -l
+-------------------------------------------
+ls -l| tr -s " " | cut -d " " -f 1,9
+-------------------------------------------
+
+
+
+sort 
+-----
+
+sort (ascii value sorting)
+
+sort -n (numeric value)	
+
+
+sort -nr (numeric/reverse) order
+
+
+sort -t":" -k4 employee
+
+
+sort -t":" -r -k4 employee
+
+sort -t":" -r -k4 employee > sort_employee   (-k sorting on column)
+
+
+sort -t":" -r -k4 -o employee employee (get sorted output got replace with existing.)
+
+
+-------------------------------------------------------------------------------------------------
+EXERCISE 4 : Find out first biggest 5 interms of size and display only name and size:
+-------------------------------------------------------------------------------------------------
+
+ls -l | tr -s " " 
+
+ls -l | tr -s " " | cut -d " " -f5,9
+
+ls -l | tr -s " " | cut -d " " -f5,9 | sort -nr -k1
+
+-------------------------------------------------------------------------------------------------
+
+**********************************************************************************************************************************************************w
+
+
+unique: (but require sorted order content)
+
+file employee:
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+
+commands: 
+
+ uniq employee
+ sort -o employee employee
+
+   
+ uniq -d employee (show only duplicated )
+
+ uniq -u employee (show only unique )
+
+ uniq -c employee (show count of occurence )
+
+
+-------------------------------------------------------------------------------------------------
+EXERCISE 4 : Find out users loged in count with unique:
+-------------------------------------------------------------------------------------------------
+ 	who | tr -s " " | cut -d " " -f1 | uniq -c
+-------------------------------------------------------------------------------------------------
+
+
+**********************************************************************************************************************************************************w
+paste command :
+
+cat > names
+ravi
+radha
+omkar
+vighnesh
+
+
+[bs15@qeserver test_dir]$ cat > city
+pune
+mumbai
+nagpur
+kolhapur
+
+
+[bs15@qeserver test_dir]$ paste names city
+ravi    pune
+radha   mumbai
+omkar   nagpur
+vighnesh        kolhapur
+
+
+**********************************************************************************************************************************************************w
+
+cp and cmp commands:
+
+
+cp names names1
+
+
+cmp names names1
+
+
+diff names names1
+1c1
+<  ravi
+---
+> ravi
+
+
+cat names
+ ravi
+radha
+omkar
+vighnesh
+
+
+cat names1
+anand
+ravi
+radha
+vighnesh
+
+
+ diff names names1
+1c1,2
+<  ravi
+---
+> anand
+> ravi
+3d3
+< omkar
+
+
+
+O/P #=> a -- append
+        d -- delete
+        c -- change
+
+
+
+
+**********************************************************************************************************************************************************w
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

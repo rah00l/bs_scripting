@@ -1,0 +1,318 @@
+
+	Day 4 - 24/07/2014
+
+
+
+Relative / Symbolic Method:
+---------------------------
+
+
+chmod user 
+
+Permissions :
+-----------------
+
+chmod u+r file1
+chmod u+rw 
+
+
+
+[bs15@qeserver scripts]$ ls -l sample/
+total 0
+[bs15@qeserver scripts]$ ls -ld sample
+drwxrwxr-x 2 bs15 bs15 4096 Jul 23 11:54 sample
+[bs15@qeserver scripts]$
+
+
+[bs15@qeserver scripts]$ chmod u-r sample/
+
+[bs15@qeserver scripts]$ ls -ld sample
+d-wxrwxr-x 2 bs15 bs15 4096 Jul 23 11:54 sample
+
+[bs15@qeserver scripts]$ chmod u+r sample
+
+[bs15@qeserver scripts]$ chmod u-w sample
+
+[bs15@qeserver scripts]$ ls -ld sample
+dr-xrwxr-x 2 bs15 bs15 4096 Jul 23 11:54 sample
+
+[bs15@qeserver scripts]$ cp demosrc_
+demosrc_accept_proper_input            demosrc_for_loop1
+demosrc_array                          demosrc_function
+demosrc_case                           demosrc_function1
+demosrc_case_menu                      demosrc_function2
+demosrc_case_menu_with_loop            demosrc_function3
+demosrc_checkfileexistance             demosrc_function4
+demosrc_copyfiles                      demosrc_function6
+demosrc_employee_data_validation       demosrc_while_with_conditions
+demosrc_for_loop                       demosrc_while_with_conditions_message
+
+[bs15@qeserver scripts]$ cp demosrc_a
+demosrc_accept_proper_input  demosrc_array
+
+[bs15@qeserver scripts]$ cp demosrc_accept_proper_input sample/
+cp: cannot create regular file `sample/demosrc_accept_proper_input': Permission denied
+
+[bs15@qeserver scripts]$ cat >> sample/file1
+bash: sample/file1: Permission denied
+
+[bs15@qeserver scripts]$ chmod u+w sample
+
+[bs15@qeserver scripts]$ chmod u-x sample
+
+[bs15@qeserver scripts]$ ls -ld sample
+drw-rwxr-x 2 bs15 bs15 4096 Jul 23 11:54 sample
+
+[bs15@qeserver scripts]$ ls sample
+
+[bs15@qeserver scripts]$ cp demoscr
+demoscr   demoscr1  demoscr3
+
+[bs15@qeserver scripts]$ cp demoscr
+demoscr   demoscr1  demoscr3
+
+[bs15@qeserver scripts]$ cp demoscr sample/
+cp: cannot stat `sample/demoscr': Permission denied
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+UMASK:-  (Masking value into env.)
+-------------
+
+
+default for dir -- 777
+for file 	-- 666
+
+	777		666	
+	002		002		
+ 	-----		-----	
+	775     	664
+
+
+
+
+[bs15@qeserver scripts]$ umask
+0002
+[bs15@qeserver scripts]$ umask 022
+[bs15@qeserver scripts]$ umask
+0022
+[bs15@qeserver scripts]$ cat > f3
+
+[bs15@qeserver scripts]$ ls -l f3
+-rw-r--r-- 1 bs15 bs15 0 Jul 24 09:41 f3
+[bs15@qeserver scripts]$
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Links:
+
+
+
+[bs15@qeserver scripts]$ ls -l file1
+-rw-r--r-- 1 bs15 bs15 0 Jul 24 09:55 file1
+
+[bs15@qeserver scripts]$ ln file1 file1ln1
+
+[bs15@qeserver scripts]$ ls -il file1*
+6194850 -rw-r--r-- 2 bs15 bs15 0 Jul 24 09:55 file1
+6194850 -rw-r--r-- 2 bs15 bs15 0 Jul 24 09:55 file1ln1
+
+Whatever changes you do with one file will appicable to linked file as well .
+
+[bs15@qeserver scripts]$ ls -il file1*
+6194850 -rw-rw-rw- 2 bs15 bs15 0 Jul 24 09:55 file1
+6194850 -rw-rw-rw- 2 bs15 bs15 0 Jul 24 09:55 file1ln1
+
+
+[bs15@qeserver dir2]$ pwd
+/home/bs15/test_dir/scripts/dir/dir1/dir2
+
+
+[bs15@qeserver dir2]$ cat ~/test_dir/awksr
+BEGIN{
+        system("clear");
+        printf("\n\t\tDate :");
+        system("date +'%d %B %y'");
+        printf("\n\t\tEmployee Report");
+        printf("\n\t\tName\tDept\tSal\n");
+        tot_sal=0;
+        FS=":";
+        #prinf("\nArgument count :%d",ARGC);
+        #prinf("\nARG[0]:%s\tARG[1]:%s")
+     }
+
+        {
+                if($3==dept && $2==name)
+                {
+                        printf("\t\t%s\t%s\t%d\n",$2,$3,$4);
+                        tot_sal += $4;
+                }
+        }
+
+END {
+
+        printf("\n\t\tTotatl Salary : %d\n",tot_sal);
+    }
+
+
+[bs15@qeserver dir2]$ cat ../../../../awksr
+BEGIN{
+        system("clear");
+        printf("\n\t\tDate :");
+        system("date +'%d %B %y'");
+        printf("\n\t\tEmployee Report");
+        printf("\n\t\tName\tDept\tSal\n");
+        tot_sal=0;
+        FS=":";
+        #prinf("\nArgument count :%d",ARGC);
+        #prinf("\nARG[0]:%s\tARG[1]:%s")
+     }
+
+
+        {
+                if($3==dept && $2==name)
+                {
+                        printf("\t\t%s\t%s\t%d\n",$2,$3,$4);
+                        tot_sal += $4;
+                }
+        }
+
+END {
+
+        printf("\n\t\tTotatl Salary : %d\n",tot_sal);
+    }
+[bs15@qeserver dir2]$
+
+
+If don't want to remember nested path for file can create link and then refer :
+
+e.g.
+
+[bs15@qeserver dir2]$ ln ~/test_dir/awksr fileli2
+[bs15@qeserver dir2]$ ls -il
+total 4
+6194237 -rw-rw-r-- 2 bs15 bs15 410 Jul 22 12:04 fileli2
+[bs15@qeserver dir2]$ vi fileli2
+
+----------------------------------------------------------------------------------------------------------------
+
+Symbliks / Softlink (create to get accesability -- defallut having all permissions)
+
+  -s (memory get allocated to them)
+	having it's own strucrute
+	can create soflinks for folders also
+	have get less mem size
+	l indicate that it is link file
+
+
+----------------------------------------------------------------------------------------------------------------
+
+
+chown:
+------
+
+
+
+
+----------------------------------------------------------------------------------------------------------------
+
+
+
+
+ ps
+  PID TTY          TIME CMD
+ 7390 pts/47   00:00:00 vim
+ 8760 pts/47   00:00:00 ps
+21250 pts/47   00:00:00 vim
+25797 pts/47   00:00:00 bash
+25829 pts/47   00:00:00 bash
+25883 pts/47   00:00:00 bash
+30493 pts/47   00:00:00 vim
+
+[bs15@qeserver ~]$ kill -k 7390
+bash: kill: k: invalid signal specification
+
+[bs15@qeserver ~]$ kill -9 7390
+
+[bs15@qeserver ~]$ ps
+  PID TTY          TIME CMD
+12458 pts/47   00:00:00 ps
+21250 pts/47   00:00:00 vim
+25797 pts/47   00:00:00 bash
+25829 pts/47   00:00:00 bash
+25883 pts/47   00:00:00 bash
+30493 pts/47   00:00:00 vim
+[2]-  Killed                  vim asd
+
+[bs15@qeserver ~]$ fg %2
+
+bash: fg: %2: no such job
+[bs15@qeserver ~]$ jobs
+[1]-  Stopped                 vim asd
+[3]+  Stopped                 vim asd
+
+[bs15@qeserver ~]$ fg %3
+vim asd
+
+[3]+  Stopped                 vim asd
+[bs15@qeserver ~]$
+
+
+
+
+Background jobs send by just &
+
+
+[bs15@qeserver test_dir]$ cd ..
+[bs15@qeserver ~]$ vi asd
+[bs15@qeserver ~]$ bg
+bash: bg: current: no such job
+[bs15@qeserver ~]$ ./asd
+[bs15@qeserver ~]$ ./asd &
+[1] 6259
+[bs15@qeserver ~]$ bg
+bash: bg: job 1 already in background
+[bs15@qeserver ~]$
+
+
+
+Sheduling:
+-----------
+
+1) 	at 13:45
+	...
+	...
+
+2) 	batch 
+
+
+3) 	crontab
+
+
+
+at scheduled job must be execute on time specified but in case of batch it may or not execute on time it will execute only when kernel load reduced if heavyly loaded kernel.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

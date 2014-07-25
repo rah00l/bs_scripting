@@ -1,0 +1,110 @@
+Vim mode
+
+i - Insert
+Escape - can exeute keyboard command
+
+
+
+
+
+
+
+:s (substitute mode last line command)
+
+
+:s/shell/hell (by default for one occurance) 
+
+:%s/shell/hell
+
+
+
+
+vim basic commands
+
+:q! (abendent quite)
+:wq (save and exit)
+
+
+
+
+:w (save and keep there only)
+
+for cursor up and down:
+j and k
+
+left right movment of cursor:
+h l
+
+single character deletion:
+x
+
+undo opration:
+u
+
+redu opration:
+.
+
+5x (five character deletion)
+
+dw (delete word)
+
+3dw (3 word delete)
+
+dd (delete whole block)
+
+:set nu (provide numbering to file content)
+
+dd (cut line )
+
+p (pest new line)
+
+P (pest above)
+
+yy - copy  (select)
+
+2yy (2 line select)
+
+p - pest
+
+
+: 5,7w new_file (export opration in new file from current file).
+
+: r file_name (import opration)
+
+
+$ - go to end at line
+
+
+
+^ - go to begening.
+
+r - character replace character.
+
+cw - chage word (can replace word)
+
+/ (then key word for search forward) for next presss n
+
+? (back word search) for next search item press n
+
+
+set nu/number
+set nonu/nonumber
+
+set ignorecase
+
+set autoindent (for indentation)
+
+set showmatch (Show  proper start brace and matched end )
+
+File:
+.exrc ()
+
+create hidden file .exrc in /home/user location and add setting for vi 
+
+
+
+
+
+
+
+

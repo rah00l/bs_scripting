@@ -1,0 +1,58 @@
+UO rediration:
+
+stdin
+stdout
+stderr
+
+
+I/P
+
+stdin
+file
+piped
+
+
+O/P
+stdout
+file
+piped
+
+
+
+Commands:
+
+ date
+ date +"%d %m %y"
+
+ who > current_users   (add )
+
+ date +"%Y %D %Y" >> current_users (append)
+
+
+tee  -- bifurgation
+ls | tee  
+
+Error Redirection:
+
+0 -- stdin
+1 -- stdout
+2 -- stderr
+
+stadin and stdout not require 0 or 1 to specify besides greater than sign but for error redirection explicitly need to give.
+
+Error got appended to file 
+ls backup 2> errorlog
+
+
+Input redirection:
+
+< reading from file 
+
+cat < filename
+
+
+cat 0<employee 1>output 2>errorlog
+
+
+
+

@@ -1,0 +1,1537 @@
+***********VI
+
+* search fwd *
+
+/<word>   - generally exact match
+
+
+
+* backword search *
+
+?<word>
+
+* substitute
+
+:s/<word>/<replace>  --- first occurance in only current line
+
+:s/<word>/<replace>/g ---  all occurances in only current line
+
+:%s/<word>/<replace>/g -- all
+
+
+****
+
+:set number/set nu
+:set nonumber
+
+:set ignorecase- set noignorecase
+
+
+******indentation
+
+:set autoindent - set noautoindent
+
+******show match for open close braces
+
+:set showmatch - set noshowmatch
+
+
+*********** default settings 
+put in .exrc file in home directory
+
+
+*******tee command
+works only with pipes
+
+
+** file descriptors
+
+0- stdin
+1- stdout
+2- stderr
+ 
+cat <wrong command> 2 > file1 --- errorlog will be redirected to file1
+
+cat 0< (input file) 1> (output file) 2> (error file)
+
+
+
+************
+
+cmds (takes input but doesnt produce output)
+>,vi,passwd,read
+
+cmds (doesnt take input but produce output)
+uname,date,time
+
+cmds (takes input and produce output)
+ls, in general all commands
+
+cmd (no ip no op)
+cd,mv,set,chmod
+
+
+*********** tr command 
+
+tr -s "" -- will squeeze all occurances of " " to one 
+
+
+**********uniq
+
+uniq -c ----occurances of duplicates
+uniq -u -- show only uniq
+
+
+
+********paste
+merge 2 files horizontally 
+
+paste -d "new delimiter" file1 file2
+
+
+******cmp,diff
+compare 2 files
+
+cmp file1 file2 ---- will show difference if any else nothing will be shown
+
+********diff
+
+diff <old file> <new file>
+
+output format 
+line_no_old_file <action -add (>)
+			/delete(<)
+			/change> line_no_new_file
+
+
+
+****comm 
+compares 2 data files which are in sorted order
+
+
+*********Grep : global search for regular expression and print
+
+
+grep "[Vv]i" --- will search for Vi and Vi 
+grep -w "word" --- word search
+
+grep -iw "word" --ignore case same as first
+grep -wi "^nr" ---starting with nr
+grep -w "^[a-z]" ---starting with character and lower case 
+
+grep -w "[a-z]$" ---end with -||-
+
+grep "\.$" --- end with . (not all characters)
+
+
+supported meta characters  (BRE characters - Basic Regular Expression meta characters)
+ ^,$,[-],[],.,\,* 
+
+************Egrep - Extended grep - supports extended meta characters(+,?,{})
+
+* = 0 or more times
++ = 1 or more times
+? = 0 or 1 time
+{}= times 
+	e.g. {1,} = 1 or more , {4} = exact 4 times
+| = or 8|9 i.e. 8 or 9
+	e.g. grep "8|9" 
+grep -E or egrep
+
+
+suppose 
+
+gargi
+gaargi
+gaaargi
+
+
+egrep "gaa*gi" -- all will be selected 2nd a will be checked with * i.e. 0 or more occurances 
+egrep "gaa+gi" -- 2nd and 3rd will be selected
+egrep "gaa?gi" -- 1st and 2nd will be selected
+
+
+suppose accept employee code of 5 digits only digits
+
+echo $var | egrep "^[0-9]{5}$"
+
+suppose accept employee code of 4 onwards digits only digits
+
+echo $var | egrep "^[0-9]{4,}$"
+
+suppose accept employee code of 1 onwards digits only digits
+
+echo $var | egrep "^[0-9]+$"
+
+
+options 
+
+-i ignore case
+-v negation
+-n line no
+-c count of lines on which pattern was detected
+-l list files which has pattern
+
+
+**********Fgrep
+
+
+
+
+***********************************************Day2*********************************************** 
+
+**************Sed and awk (all above metachar are supported)
+
+sed advantages over grep/egrep 
+1. allows modification
+2. allows searching multiple patterns
+
+awk advantages over grep/egrep  (similar to grep, doesnt allow modification)
+1. allows searching multiple patterns
+2. allows field addressing1. 
+
+
+
+***********sed  (specify line_no or pattern else command will executed on all lines)
+
+1. sed "line_no command" file
+2. sed "/pattern/command" file
+
+
+commands :
+p = print
+w = write
+i = insert
+d = delete
+s = substitute/set
+a = append
+
+sed 2p file ----- print 2nd line
+
+
+
+***************execution flow 
+
+						check for pattern
+file -> hold space (holds the file contents) -------------------> patterns space (perform command on matched pattern) -> std out or  file
+
+
+
+sed -n (do not print pattern space on stdout i.e. show only desired output only be used with w and p commands)
+
+sed -n "/^e005$/w emp" emp1 ---- write e005 record from emp to emp1 
+
+
+
+******(for below commands , actions will happen on pattern space not in actual file)
+
+sed "1iHello" emp --- insert hello at 1 record location in emp but only in pattern space and file should not be empty and line should be present i.e. it uses existing lines 
+			if line is not present then nothing will happen.
+
+
+sed  "1aHello" emp -- append Hello at 1 line in emp, here it will be inserted i.e. will create new line
+
+
+sed "3d" emp --- delete 3rd record
+
+
+sed "/^e005/d" emp --- delete record containing e005 pattern
+
+sed -n "/^e005/d" emp --- delete record containing e005 pattern -- no output on screen
+
+
+
+sed "s/comp/COMP" emp -- find comp and substitute with COMP in file emp
+
+sed "/nrk/s/comp/COMP" emp -- find nrk pattern first then exeucte command substitute only to record who match nrk pattern i.e in matched pattern find comp and substitute with COMP in file emp
+
+
+sed "s/a/x/" emp -- replace a with x only first occurance on all lines
+
+sed "s/a/x/g" emp -- replace a with x only first occurance globally
+
+
+
+***************execute multiple commands/patterns -e (extended)
+
+sed -n -e "2p" -e "/nrk/w data" -e "1,3w data2" emp -- print 2nd line from emp and find nrk from emp and write it into data and write 1-3 line to data2 from emp i.e. emp is 
+							common input and perform actions 
+
+
+
+**************AWK (Aho,Weinberger,Kernigham)  (generally supports c like syntaxes)
+
+syntax :  awk '{action}' file   ----action are awk commands 
+
+
+awk '/<search pattern>/{action}' file --- can provide search pattern
+
+
+it supports field because of built in variables like,
+
+$0 - current full record
+$1 - first field
+.
+.
+.
+
+
+NR - record no/relative line no
+NF - total no. of fields in a current record
+
+FILENAME - current filename which is in process
+FS - field seperator
+ARGC - arg count
+ARGV - arg values
+
+
+
+awk '{print $0}' emp ---- will print complete emp file
+awk -F":" '{print $1,$2}' emp ---- will print first and 2nd field from complete emp file
+
+advantages over cut : gives formatted output
+
+
+awk -F":" '{printf("%s,%d",$1,$2);}' emp ---- will print 2nd and 4th where type of 2nd column is string and 4th is integer from complete emp file
+
+\t,\n works here
+
+awk -F":" '{printf("\t%s,\t%d\n",$1,$2);}' emp 
+
+
+----pattern search and action
+
+awk -F":" '/comp/{printf("\t%s,\t%d\n",$1,$2);}' emp --- search comp pattern and apply action to them
+
+awk -F ":" '{if($3=="comp")printf("\t%s,\t%d\n",$2,$4);}' emp --- similar output
+
+
+
+
+*************sections in awk 
+
+BEGIN{} 
+
+--printing of header,date,pageno etc. things which are to be done only once and in beginning
+
+
+END{}
+
+--printing of footer,date,pageno etc. things which are to be done only once and at end
+
+these 2 sections are optional
+
+
+************use sections
+
+awk -F ":" 'BEGIN{printf("\tName\tSalary\n");}{if($3=="comp")printf("\t%s,\t%d\n",$2,$4);}' emp 
+
+output:
+        Name    Salary
+        nrk,    40000
+        geti,   40000
+
+awk -F ":" 'BEGIN{printf("\tName\tSalary\n");}{if($3=="comp")printf("\t%s,\t%d,%d\n",$2,$4,NF);}' emp 
+
+[bs14@qeserver ~]$ awk -F ":" 'BEGIN{printf("\tName\tSalary\n");}{if($3=="comp")printf("\t%s,\t%d,%d\n",$2,$4,NF);}' emp
+        Name    Salary
+        nrk,    40000,4
+        geti,   40000,4
+
+
+[bs14@qeserver ~]$ awk -F ":" 'BEGIN{printf("\tName\tSalary\n");}{if($3=="comp")printf("\t%s,\t%d,%d\n",$(NF-2),$NF,NF);}' emp
+        Name    Salary
+        nrk,    40000,4
+        geti,   40000,4
+
+
+[bs14@qeserver ~]$ awk -F ":" 'BEGIN{printf("\tName\tSalary\n");}{if(NR==2)printf("\t%s,\t%d,%d\n",$(NF-2),$NF,NF);}' emp
+        Name    Salary
+        ravi,   30000,4
+
+
+[bs14@qeserver ~]$ awk -F ":" -f awk1 emp
+
+                Employee Report
+        Name    Dept    Salary
+        nrk     comp    40000   ravi    mktg    30000   geti    comp    40000   vishal  accts   60000   manish  sales   35000   ashish  mgmt    85000   saurabh mktg    10000   saurabh  mktg    10000[bs14@qeserver ~]$
+
+
+
+
+
+*******************awk scripting
+
+[bs14@qeserver ~]$ vi awk1
+[bs14@qeserver ~]$ awk -F ":" -f awk1 emp
+
+                Employee Report
+        Name    Dept    Salary
+        nrk     comp    40000   ravi    mktg    30000   geti    comp    40000   vishal  accts   60000   manish  sales   35000   ashish  mgmt    85000   saurabh mktg    10000   saurabh  mktg    100
+[bs14@qeserver ~]$
+[bs14@qeserver ~]$
+[bs14@qeserver ~]$
+[bs14@qeserver ~]$ vi awk1
+[bs14@qeserver ~]$ awk -F ":" -f awk1 emp
+
+                Employee Report
+        Name    Dept    Salary
+        nrk     comp    40000
+        ravi    mktg    30000
+        geti    comp    40000
+        vishal  accts   60000
+        manish  sales   35000
+        ashish  mgmt    85000
+        saurabh mktg    10000
+        saurabh mktg    10000
+[bs14@qeserver ~]$
+[bs14@qeserver ~]$ awk -F ":" -f awk1 emp				------ pattern
+
+                Employee Report
+        Name    Dept    Salary
+        nrk     comp    40000   geti    comp    40000[bs14@qeserver ~]$
+
+				
+[bs14@qeserver ~]$ awk -F ":" -f awk1 emp				---if
+
+                Employee Report
+        Name    Dept    Salary
+        nrk     comp    40000   geti    comp    40000[bs14@qeserver ~]$
+
+
+
+***************Awk script
+
+1 BEGIN {
+  2         printf("\n\t\tEmployee Report");
+  3         printf("\n\tName\tDept\tSalary\n");
+  4         }
+  5
+  6 /<pattern>comp/{						--- pattern
+  7         printf("\t%s\t%s\t%d",$2,$3,$4);
+  8 }
+
+
+		or 
+
+
+  6 {	
+	    if ($3=="comp")					--- if
+  7         printf("\t%s\t%s\t%d",$2,$3,$4);
+  8 }
+
+
+
+all system functions can be used with "system()" function 
+
+
+1 BEGIN {
+	    system("clear");					--system fun
+	    system("date");		
+  2         printf("\n\t\tEmployee Report");
+  3         printf("\n\tName\tDept\tSalary\n");
+  4         }
+  5
+  6 /<pattern>comp/{						--- pattern
+  7         printf("\t%s\t%s\t%d",$2,$3,$4);
+  8 }
+
+
+
+**********************for addition of sal
+
+ 1 BEGIN {
+  2         system("clear");
+  3         printf("\n\t\tEmployee Report");
+  4         printf("\n\tName\tDept\tSalary\n");
+  5         total_sal=0;
+  6         }
+  7
+  8 {
+  9         if ($3=="comp")
+ 10         {
+ 11                 printf("\t%s\t%s\t%d",$2,$3,$4);
+ 12                 total_sal+=$4;
+ 13         }
+ 14 }
+ 15
+ 16 END {
+ 17         printf("\n\t\tTotal sal :%d\n",total_sal);
+ 18 }
+
+
+
+  1 BEGIN {
+  2         system("clear");
+  3         printf("\n\t\tEmployee Report");
+  4         printf("\n\tName\tDept\tSalary\n");
+  5         total_sal=0;
+  6         FS=":"   --- no need to specify seperator while running script. (; is not compulsary in script but it is on command line)
+  7         }
+  8
+  9 {
+ 10         if ($3=="comp")
+ 11         {
+ 12                 printf("\t%s\t%s\t%d",$2,$3,$4);
+ 13                 total_sal+=$4;
+ 14         }
+ 15 }
+ 16
+ 17 END {
+ 18         printf("\n\t\tTotal sal :%d\n",total_sal);
+ 19 }
+
+
+[bs14@qeserver ~]$ awk -f awk2 emp
+
+                Employee Report
+        Name    Dept    Salary
+        nrk     comp    40000   geti    comp    40000
+                Total sal :80000
+
+
+
+
+*********************to make script generalized / parameterized
+
+script -- 
+
+  1 BEGIN {
+  2         system("clear");
+  3         printf("\n\t\tEmployee Report");
+  4         printf("\n\tName\tDept\tSalary\n");
+  5         total_sal=0;
+  6         FS=":"
+  7         }
+  8
+  9 {
+ 10         if ($3==dept)
+ 11         {
+ 12                 printf("\t%s\t%s\t%d",$2,$3,$4);
+ 13                 total_sal+=$4;
+ 14         }
+ 15 }
+ 16
+ 17 END {
+ 18         printf("\n\t\tTotal sal :%d\n",total_sal);
+ 19 }
+
+
+
+
+
+[bs14@qeserver ~]$ awk -v dept="comp" -f awk2 emp
+
+                Employee Report
+        Name    Dept    Salary
+        nrk     comp    40000   geti    comp    40000
+                Total sal :80000
+
+
+
+multiple variables can also be passed
+
+
+
+
+**********************SHELL BASICS 
+
+
+run multiple commands 
+
+pwd;date
+
+(pwd;date)> file
+
+
+
+*********************Multiple shells diff
+
+
+			sh		ksh		csh		bash			
+			
+command history 	N		Y		Y		Y
+	
+command 		N		N		Y		Y
+editing	
+
+conf files		.profile	.profile	.login		.bash_profile
+			.rc		.kshrc		.cshrc		.bashrc
+
+
+
+*********file for command history
+
+bash_history --- bash 
+
+
+************Shell variables
+
+1. built in variables 
+	$0,S1
+	$# - gives total no of arguments passed to program 
+	$s - 
+	$@ - complete string of arguments (will store seperately, space is the seperator)	
+	$_ - prev command
+	$* - complete string of arguments (will be stored as a single string)	
+	$$ - 
+	$! - 
+	$? - exit status of recent executed command	 
+
+
+shift --------- will delete/shift/move first argument to second i.e. right to left 
+shift 4 --------  will delete/shift/move 4 argument to next 4 i.e. right to left 
+
+
+
+2. Environment variables 
+
+	PATH,HOME,USERNAME etc.
+
+HISTSIZE = max no of command to be stored in history file
+HISTSIZE = new value
+
+
+3. user defined variables 
+
+
+
+
+****************operations
+
+1.expr
+
+expr $x + $y
+
+[bs14@qeserver ~]$ x=10
+[bs14@qeserver ~]$ y=20
+[bs14@qeserver ~]$ expr $x + $y
+30
+[bs14@qeserver ~]$ expr $x \* $y
+200
+
+drawback : doesnt support float values (generally in division)
+
+
+
+2. bc
+
+[bs14@qeserver ~]$ echo "$x/$y" | bc -l
+.50000000000000000000
+[bs14@qeserver ~]$ echo "scale=2;$x/$y" | bc -l
+.50
+
+
+
+3. let similar to expr for math operations
+
+[bs14@qeserver ~]$ let z=x+y
+[bs14@qeserver ~]$ echo $z
+30
+[bs14@qeserver ~]$
+
+but works only on bash and  ksh, above is similar to 
+[bs14@qeserver ~]$ z=$((x+y))
+[bs14@qeserver ~]$ echo $z
+30
+
+
+but it is again interpretation of let command thus supported on above 2 shells
+
+
+
+************export 
+
+export variables globally so that further child shells can use it directly otherwise they cant, but this cannot be done in reverse order 
+i.e. variable exported from child shell cannot be used in parent shell as when we exit from child shell, process dies and all data is wiped out 
+
+
+*********chsh  --- changes shell for user permanently
+
+*********sh will spawn you child shell  --- $$ will give pid of current shell
+
+
+**********alias -- create synonym for a command 
+
+alias ----- list all aliases
+
+
+alias cls='clear'  <temp profile>
+
+for permanent , add it in .bashrc file (as for every shell/child shell creation .bash_profile file will be executed only once but .bashrc will be executed every time 
+thus should be added in .bashrc file)
+
+unalias cls 
+
+
+
+****************forking required shell from script 
+
+this is useful if we use any particular functions of below shell, so instead of forking default shell which doesnt contain commands present in file then error will occur 
+thus below command will help
+
+
+#!/bin/bash   - will fork bash shell 
+#!/bin/sh	- will fork sh shell 
+#!/bin/ksh	- will fork ksh shell 
+#!/bin/csh	- will fork csh shell 
+
+
+if we dont specify this in file then parent shell will spawn instance of default shell
+
+--- #!  represent special , this will get executed before script execution
+like #!<pgm>
+
+
+
+******************operators
+
+Math 		: +,-,/,*,% 
+
+Relational 	: -gt,-lt,-ge,-le,-eq,-ne	----|Relational/comaparison
+String 		: <space>=<space>,!=		----|	
+
+logical 	: -a,-o (and/or)
+ 
+File		: -e -- -exists
+		  -f -- exists and regular 	
+		  -d -- exists and directory 
+		  -r -- exists and readable 
+		  -w -- exists and writable
+		  -x -- exists and executable
+		  -s -- exists and empty	
+
+
+******************Control statements
+
+1. Conditional  		
+	1.1. If..fi 
+	1.2. case..esac
+2. loop
+
+
+
+*************If 
+
+1. if <condition> ;then
+<>
+else
+<>
+fi
+
+
+2. 
+if <condition> ;then
+<>
+elif <condition>; then
+<>
+else
+<>
+fi
+ 
+
+
+
+*************check for file existence
+
+if test -f $filename
+then
+<task>
+else
+<>
+fi
+
+
+1 read -p "enter file name" filename
+  2
+  3 if test -f $filename; then
+  4 echo "contents of file are : "
+  5 cat $filename
+  6 echo -e "line count : \c"
+  7 wc -l < $filename
+  8 else
+  9 echo "no such file"
+ 10 fi
+
+
+or 
+
+  1 read -p "enter file name : " filename
+  2
+  3 if [ -f $filename ]; then
+  4 echo "contents of file are : "
+  5 cat $filename
+  6 echo -e "line count : \c"
+  7 wc -l < $filename
+  8 else
+  9 echo "no such file"
+ 10 fi
+
+
+if [ ! -f $filename ]; then  --- if file is not present
+
+
+
+[bs14@qeserver ~]$ ./demoscript2
+enter file namehello
+no such file
+[bs14@qeserver ~]$ ./demoscript2
+enter file namedata
+no such file
+[bs14@qeserver ~]$ ./demoscript2
+enter file nameemp
+contents of file are :
+e001:nrk:comp:40000
+e002:ravi:mktg:30000
+e003:geti:comp:40000
+e004:vishal:accts:60000
+e005:manish:sales:35000
+e006:ashish:mgmt:85000
+e007:saurabh:mktg:10000
+e000:saurabh:mktg:10000
+line count : 8
+[bs14@qeserver ~]$ ./demosc
+
+
+
+**********compare 2 files
+
+
+ 1 read -p "enter file1 name : " file1
+  2 read -p "enter file2 name : " file2
+  3
+  4 #if [ -f $file1 -a -f $file2 ]; then
+  5 if [! -f $file1 -a -f $file2 ]; then
+  6
+  7
+  8 count1=`wc -l < $file1`
+  9 count2=`wc -l < $file2`
+ 10
+ 11 if [ $count1 -gt $count2 ]; then
+ 12 echo "$file1 is bigger"
+ 13 elif [ $count1 -eq $count2 ]; then
+ 14 echo "$file1 has equal lines as that of $file2"
+ 15 else
+ 16 echo "$file2 is bigger"
+ 17 fi
+ 18 else
+ 19 echo "atleast one of the files is not present"
+ 20 fi
+
+
+
+*****************Case 
+
+
+[bs14@qeserver ~]$ vi case.sh
+  1 i=1
+  2 while (($i))
+  3 do
+  4 read -p "Enter your choice (1-3): " choice
+  5 case $choice in
+  6 1) echo "you selected 1"
+  7         ;;
+  8 2) echo "you selected 2"
+  9         ;;
+ 10 3) echo "you selected 3"
+ 11         ;;
+ 12 *) echo "wrong choice"
+ 13         i=0;
+ 14         break;
+ 15 esac
+ 16 read -p "Enter to continue..."
+ 17 done
+ 18 echo "demo over"
+
+
+**********loop
+
+while [<condition>]
+do
+
+
+done
+
+------accept name in characters only unless user specifies correctly
+
+ 1 while true
+  2 do
+  3
+  4         read -p "enter name : " name
+  5         res=`echo $name|egrep -ic "^[a-z]+$"`
+  6
+  7         if [ $res -gt 0 ]
+  8         then
+  9                 break
+ 10         else
+ 11                 echo "enter valid characters"
+ 12         fi
+ 13 done
+
+
+
+----accept empcode only digits min2 
+	   name only char max 20
+	   sal > 1000
+	write to a file
+
+
+ 1 #!/bin/bash
+  2 echo "Emp code  Emp Name        Emp Sal" > emp.info
+  3
+  4 i=1
+  5 while [ $i -eq 1 ]
+  6 do
+  7 #clear
+  8
+  9 read -p "Enter emp code : " empcode
+ 10 if [ `echo $empcode| egrep -ic "^[0-9]{2,}$"` -gt 0 ]
+ 11 then
+ 12         while true
+ 13         do
+ 14         read -p "Enter emp name for $empcode : " empname
+ 15         #var=`echo $empname|egrep -ic "^[a-z][1,20]$"`
+ 16         #echo $var
+ 17         if [ `echo $empname|egrep -ic "^[a-z]{1,20}$"` -gt 0 ]
+ 18         then
+ 19                 break
+ 20         else
+ 21                 echo "please enter valid name"
+ 22         fi
+ 23
+ 24         done
+ 25
+ 26         while true
+ 27         do
+ 28         read -p "Enter emp salary of $empname : " empsal
+ 29         if [ `echo $empsal| egrep -ic "[0-9]"` -gt 0 -a $empsal -gt 10000 ]
+ 30         then
+ 31                 echo "Saving information in file... please wait"
+ 32                 echo "$empcode          $empname        $empsal" >> emp.info
+ 33                 sleep 3
+ 34                 read -p  "record saved successfully \n do you want to continue.....(y/n)" choice
+ 35                 case $choice in
+ 36                 'n'|'N')i=0
+ 37                         break;
+ 38                         ;;
+ 39                 *) break
+ 40                 esac
+ 41
+ 42         else
+ 43                 echo "please enter valid sal"
+ 44         fi
+ 45         done
+ 46
+ 47 else
+ 48         echo "please enter valid emp oode"
+ 49 fi
+ 50 done
+
+
+
+
+****************for 
+
+for <variable> in <list of values>
+do
+:
+done
+
+
+**************find 
+
+find <search dir> -type f,c,s,d,etc -maxdepth <depth till search is required> -perm <permission eg. 644,755 etc> -size < in character blocks i.e 0c,100c> 
+				    -mtime <modification time i.e. +1,-1 i.e. one day before> -exec <run command on filtered files without user interaction> 
+												-ok <run command on filtered files with user interaction> 	
+
+
+
+delete regular files with size 0 
+
+ find . -type f -size 0c -exec rm {} \;
+ find . -type f -size 0c -ok rm {} \;	-- will ask for confirmation
+
+
+-- max depth should be used before type (this is so to limit searches, will get warning if used later)
+
+
+[bs14@qeserver ~]$ find . -name "sample*"
+./sample1
+./sample2
+[bs14@qeserver ~]$ find . -name "sample*" -type f -size 0c -exec cat {} \;
+[bs14@qeserver ~]$ find . -name "sample*" -type f -size 0c -exec cat {} \;
+[bs14@qeserver ~]$ echo "hello" > sample1
+[bs14@qeserver ~]$ echo "hello2" > sample2
+[bs14@qeserver ~]$ find . -name "sample*" -type f -size 0c -exec cat {} \;
+[bs14@qeserver ~]$ find . -name "sample*" -type f -exec cat {} \;
+hello
+hello2
+[bs14@qeserver ~]$
+
+
+
+
+--------copy files on command line 
+
+[bs14@qeserver ~]$ vi copyfile.sh
+  1
+  2 if [ $# -gt 1 ]
+  3 then
+  4         for i in `seq 2 $#`
+  5         do
+  6                 cp `echo $@ | tr -s " " | cut -f$i -d " "` $1
+  7         done
+  8 fi
+  9 ls $1
+ 10
+
+
+[bs14@qeserver ~]$ ./copyfile.sh test/ sample1 sample2 file1 file2
+file1  file2  sample1  sample2
+
+
+----same assignment can be done using shift command
+
+dir=$1
+for fname in $@
+do
+shift 
+	[-f fname]
+	cp $1 $dir
+done
+
+
+------copying contents from a file to another from vi 
+
+:1.9w fielname --- copy 1-9 lines to filename
+
+
+
+-------------ceating fun lib
+
+contains only function definitions
+
+
+[bs14@qeserver ~]$ vi funclib
+  1 disp()
+  2 {
+  3         echo "hello"
+  4 }
+  5 add()				-- should contain only fun definitions. nothing else should be there outside {} quotes
+  6 {
+  7         expr $1 + $2
+  8 }
+
+
+[bs14@qeserver ~]$ vi fundemo
+  1 . ./funclib				-- provide full path of fun library
+  2
+  3 # main script
+  4 clear
+  5
+  6 disp
+  7 add 100 200
+
+
+-------------------create a script for accepting 2 no and perform basic arithmatic
+
+-----funclib
+
+  1 disp()
+  2 {
+  3         echo "hello"
+  4 }
+  5 add()
+  6 {
+  7         expr $1 + $2
+  8 }
+  9
+ 10 sub()
+ 11 {
+ 12         expr $1 - $2
+ 13 }
+ 14 mul()
+ 15 {
+		expr $1 \* $2			-- dont forget to comment special symbols
+ 16         		or
+		echo $1*$2 | bc -l
+ 17 }
+ 18 div()
+ 19 {
+ 20         echo $1/$2 |bc -l
+ 21 }
+
+
+---functionmenu
+
+[bs14@qeserver ~]$ vi functionmenu
+  1 . ./funclib
+  2 read -p "enter 1st no : " val1
+  3 read -p "enter 2st no : " val2
+  4
+  5 while true
+  6 do
+  7 clear
+  8
+  9 read -p "\nOperations list : \n\t1.Add\n\t2.Substract\n\t3.Multiply\n\t4.Divide\n\t5.Exit\n\n Enter your choice : " choice
+ 10
+ 11 case $choice in
+ 12 1)add $val1 $val2
+ 13         ;;
+ 14 2)sub $val1 $val2
+ 15         ;;
+ 16 3)mul $val1 $val2
+ 17         ;;
+ 18 4)div $val1 $val2
+ 19         ;;
+ 20 5)break
+ 21         ;;
+ 22 *)
+ 23 esac
+ 24 read -p "Enter to continue"
+ 25
+ 26 done
+~
+
+
+
+
+********************code debugging
+
+set -vx (verbose and execute mode) ---- put it where you want to debug the code block
+
+--
+--  code block
+--
+
+set +vx
+
+
+
+
+
+
+************************Array
+
+starts index from 0 and grows dynamically
+
+[bs14@qeserver ~]$ num_arr=(2 4 6 8)
+[bs14@qeserver ~]$ echo ${num_arr[2]}
+6
+[bs14@qeserver ~]$ echo ${num_arr[@]}
+2 4 6 8
+[bs14@qeserver ~]$ echo ${#num_arr[@]}
+4
+[bs14@qeserver ~]$ num_arr[4]=100
+[bs14@qeserver ~]$ num_arr[5]=200
+[bs14@qeserver ~]$ echo ${num_arr[@]}
+2 4 6 8 100 200
+[bs14@qeserver ~]$ echo ${#num_arr[@]}
+6
+[bs14@qeserver ~]$
+
+-----assgn
+
+[bs14@qeserver ~]$ vi arrdemo
+  1 clear
+  2 i=0
+  3 ans='y'
+  4
+  5 while [ $ans != 'n' ]
+  6 do
+  7         read -p "enter value : " no
+  8         arr[$i]=$no
+  9         i=`expr $i + 1`
+ 10         read -p "add more?.." ans
+ 11 done
+ 12 len=`echo ${#arr[@]}`
+ 13 echo "length of arr = $len"
+ 14 i=0
+ 15 sum=0
+ 16 #set -vx
+ 17 while [ $i -lt $len ]
+ 18 do
+ 19         echo ${arr[$i]}
+ 20         no=`echo ${arr[$i]}`
+ 21         sum=`expr $sum + $no`
+ 22         i=`expr $i + 1`
+ 23 done
+ 24 echo "total of no = $sum"
+ 25 #set +vx
+
+
+
+[bs14@qeserver ~]$ ./arrdemo
+enter value : 3
+add more?..y
+enter value : 4
+add more?..n
+length of arr = 2
+3
+4
+total of no = 7
+[bs14@qeserver ~]$
+
+
+
+************************Assignment1
+
+  1 choice=1
+  2 while [ $choice != 5 ]
+  3 do
+  4 echo -e "Menu\n 1. Check Login for user \n 2. Check user \n 3. user process \n 4. report generation \n 5. exit \n\n Enter your choice : "
+  5 read -p choice
+  6
+  7 read -p "enter login name for user : " name
+  8 case $choice in
+  9 1)      status=`egrep -ic "$name" /etc/passwd`
+ 10         if [ $status -gt 0 ]
+ 11         then
+ 12                 echo "user is present into the system "
+ 13         else
+ 14                 echo "user is not present into the system"
+ 15         fi
+ 16         ;;
+ 17 2)      status=`who | egrep -ic "$name"`
+ 18         if [ $status -gt 0 ]
+ 19         then
+ 20                 echo "user has logged in into the system "
+ 21         else
+ 22                 echo "user has not logged in into the system"
+ 23         fi
+ 24         ;;
+ 25
+ 26 3)      status=`ps -f | egrep -ic "$name"`
+ 27         if [ $status -gt 0 ]
+ 28         then
+ 29                 echo "there are $status processes running for $name"
+ 30         else
+ 31                 echo "there are no processes running for ${name} user"
+ 32         fi
+ 33         ;;
+ 34
+ 35 4)      print_report #$name
+ 36         print_process #$name
+ 37         ;;
+ 38
+ 39 5)      break
+ 40         ;;
+ 41
+ 42 *)      break
+ 43 esac
+ 44
+ 45 done
+ 46
+ 47 print_report(){
+ 48
+ 49         BEGIN{
+ 50                 printf("\n\t -----------User Report-------------");
+ 51         }
+ 52         /$name/{
+ 53                 printf("\n\tUser Name: %s\n\tDefault Shell: %s",$1,$6);
+ 54         }
+ 55 }
+ 56
+ 57 print_process(){
+ 58         BEGIN{
+ 59                 printf("\n\tUID\tPIT\tPPIT\tC\tSTIME\tTTY\tTIME\tCMD\n ");
+ 60         }
+ 61         {
+ 62                 ps -f| tr -s " " |awk -F " " '/$name/{printf("%s\t%d\t%d\t%d\t%s\t%s\t%s\t%s",$1,$2,$3,$4,$5,$6,$7,$8);}'
+ 63         }
+ 64 }
+ 65
+ 66
+ 67
+
+
+
+
+*************Chmod 
+
+1. Relative method 
+
+u = user
+g = group 
+o = other 
+
+
+chmod u+x
+chmod u+r
+chmod go-w
+chmod ou+x
+chmod o+r
+
+
+2. Octal method 
+
+chmod 755
+
+
+
+*************umask
+
+value for setting FAP 
+generally 0002  --- first 0 bit is for type of file
+
+
+everytime OS assigns 777 for directories and 666 for files
+
+so if umask is set then permissions will be 
+
+
+	777		666	
+      -	002	       -002
+	775		664
+	directories	files
+
+so if umask is not set then 777 and 666 FAP will be assigned 
+
+
+if you want to change the umask value then you can change it like
+
+umask 666 or umask 002 etc.
+
+if you set it from prompt then its temp not permanent
+
+
+
+
+**********Sticky bit
+
+if a file is used by many user frequently then sticky bit will help
+this will instruct os to store the file in memory after first fetch and then following operations will be done from memory
+
+
+chmod +t <file> or <dir>
+
+last bit in FAP will be T
+
+[bs14@qeserver ~]$ chmod +t awk1
+[bs14@qeserver ~]$ ls -ld awk1
+-rw-rw-r-T 1 bs14 bs14 121 Jul 22 11:39 awk1
+[bs14@qeserver ~]$
+
+
+if sticky bit is set then only owner and admin can modify/remove it though all users have rwx permissions on that file
+
+
+
+********************suid 
+
+for granting temp permissions on system files
+
+chmod u+s <file>
+chmod g+s <file>
+
+sys files 
+
+/etc/ generally
+
+[bs14@qeserver ~]$ chmod u+s awk1
+[bs14@qeserver ~]$ ls -ld awk1
+-rwSrw-r-T 1 bs14 bs14 121 Jul 22 11:39 awk1
+
+
+to provide execute and suid permissions 
+
+chmod u+sx <file>
+
+this +s will grant temp ownership to user and operations can be performed and after that remove that bit
+
+
+*************Links
+
+1. Hard link
+
+	creates multiple copies of same data pointing to same physical file 
+	
+	---ln option creates hard link by default (this is like multiple names for single file)
+	
+	-- cat <file1> and cat <file2> will give the same content
+
+	chmod will change the FAP on both files as this info is gets stored in inode but both of them are pointing to same inode so this will show FAP for both file
+
+	this will increase the link count associated with the original file
+	
+ 	-rwSrw-r-T 1<link count> bs14 bs14 121 Jul 22 11:39 awk1
+	
+	cp on hardlink will create another hardlink of same file and will increase the count
+	
+	OS will treat all files including original file as links for inode and deleting any file <original also> then that will decrease link count 
+	but wont delete actual inode unless link count becomes 0
+
+	hardlink cannot be created for a directory
+	by default, directory has link count -2 as it contains . and .. which points to same dir and parent dir
+
+	for any directory link count = count of subdirectories + 2(for . and dir name itself)
+
+	thus explicit hard link creation is not allowed for dir
+
+	ls -ild <file or dir> will give us detailed data
+
+
+2. Symlink/symbolic link/soft link	
+	
+	
+	ls -s <actual file>  <symlink name>
+	
+	create a seperate file with seperate inode and will have 777 permissions so that it should be accessible to all 
+	andl link count =1 as new inode is created and notation changes to symlink -> original file name	
+
+[bs14@qeserver ~]$ ln -s awk1 awkln1
+[bs14@qeserver ~]$ ls -il awk*
+6194241 -rw-rw-r-T 1 bs14 bs14 121 Jul 22 11:39 awk1
+6194220 -rw-rw-r-- 1 bs14 bs14 351 Jul 22 12:02 awk2
+6194884 lrwxrwxrwx 1 bs14 bs14   4 Jul 24 11:03 awkln1 -> awk1
+	
+
+	it stores inode of actual file and when cat <symlink> is done then it reads inode no of actual file and reads its contents from that inode
+	as its file structure is different thus it is smaller in size and filetype is also different i.e. l
+	but this is not true for hardlinks 
+
+
+[bs14@qeserver ~]$ ln awk1 awkhl
+[bs14@qeserver ~]$ ls -il awk*
+6194241 -rw-rw-r-T 2 bs14 bs14 121 Jul 22 11:39 awk1
+6194220 -rw-rw-r-- 1 bs14 bs14 351 Jul 22 12:02 awk2
+6194241 -rw-rw-r-T 2 bs14 bs14 121 Jul 22 11:39 awkhl
+6194884 lrwxrwxrwx 1 bs14 bs14   4 Jul 24 11:03 awkln1 -> awk1
+[bs14@qeserver ~]$
+
+
+	
+
+------------pgrep
+
+****************************Interrupts 
+
+------pkill
+
+*****************trap
+
+
+
+***************job scheduling 
+
+jobs command will show all stopped processes 
+
+[bs14@qeserver ~]$ jobs
+[bs14@qeserver ~]$ vi jobs1
+
+[1]+  Stopped                 vim jobs1
+[bs14@qeserver ~]$ jobs
+[1]+  Stopped                 vim jobs1
+[bs14@qeserver ~]$ vi jobs2
+
+[2]+  Stopped                 vim jobs2
+[bs14@qeserver ~]$ jobs
+[1]-  Stopped                 vim jobs1
+[2]+  Stopped                 vim jobs2
+[bs14@qeserver ~]$ vi jobs3
+
+[3]+  Stopped                 vim jobs3
+[bs14@qeserver ~]$ jobs
+[1]   Stopped                 vim jobs1
+[2]-  Stopped                 vim jobs2
+[3]+  Stopped                 vim jobs3
+[bs14@qeserver ~]$
+
+
+
+
+to get those processes to foreground then fg command is thre
+
+
+fg ------- recently suspended job will resume
+fg %2 ------ 2nd process i.e. vi jobs2  will resume 
+
+
+--------------to start processes in background
+
+
+<command /file> & 
+
+[bs14@qeserver ~]$ ./loop.sh  &
+[4] 11036
+[bs14@qeserver ~]$ jobs
+[1]   Stopped                 vim jobs1
+[2]-  Stopped                 vim jobs2
+[3]+  Stopped                 vim jobs3
+[4]   Running                 ./loop.sh &
+[bs14@qeserver ~]$
+[bs14@qeserver ~]$ fg %4
+./loop.sh 
+ 
+<cntl+ C>
+
+[bs14@qeserver ~]$ jobs
+[1]   Stopped                 vim jobs1
+[2]-  Stopped                 vim jobs2
+[3]+  Stopped                 vim jobs3
+[bs14@qeserver ~]$
+
+
+
+***************cron jobs
+
+
+
+--------------------at
+
+to schedule job at a particular time
+
+at <time> <command which you want to run> 
+
+or 
+
+at <time> <hit enter, at prompt will open and then type all commands and hit ctrl+d which says <EOT> i.e. end of at input>
+
+job will run at <time>
+
+user interactive/std out/stdin requiring commands should be used in jobs
+
+to remove job scheduled by at command is atrm -- this will remove recent scheduled job
+
+atq -- will show all scheduled jobs 
+
+atrm <id> will remove job with <id>
+
+
+at.allow and at.deny in /var/spool  for accessing if not present then only admin and if present and are empty then all users can use it
+
+
+
+----------------------batch
+
+batch <time> this will open at prompt , type all commands you want to run and ctrl+d i.e.<EOT> and will be scheduled
+
+there is diff in execution of at and batch.
+at will be definitely scheduled at specified time but batch job execution will depend on server load i.e. if server is full then server will decide when to schedule it
+
+
+----------------------crontab
+
+schedule file
+
+ 1 00 15 24 7 * ./try &
+
+[bs14@qeserver ~]$ crontab schedule
+
+[bs14@qeserver ~]$ ls /var/spool/cron
+root				----- system creates/ schedules job with user name
+
+
+crontab -e <schedule>			---- will schedule edited schedule file 
+
+---to remove cron job, edit the schedule file and delete the entry and again schedule it.
+
+
+
+
+
+
+
+
+
+

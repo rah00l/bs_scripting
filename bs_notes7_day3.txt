@@ -1,0 +1,246 @@
+Day 3 - 23/07/2014
+
+
+Functions:
+------------  
+
+
+1 dispMsg(){
+  2         echo "Within Function."
+  3
+  4 }
+  5
+  6 # Main Script
+  7
+  8 clear
+  9 echo "Calling Function"
+ 10
+ 11 dispMsg  # function call
+ 12
+ 13 echo "Function Over"
+ 14
+
+
+
+
+
+
+
+1 . ./libfunction   #(function placed in other file and including)
+  2
+  3 # Main Script
+  4
+  5 clear
+  6 echo "Calling Function"
+  7
+  8 dispMsg  # function call
+  9 call $1 $2
+ 10
+ 11 echo "Function Over"
+
+
+
+vi libfunction
+ 1 dispMsg(){
+  2         echo "Within Function."
+  3
+  4 }
+  5
+  6 call()
+  7 {
+  8         expr $1 + $2
+  9 }
+
+
+
+
+Airthmatic Oprations using function-case-loop
+
+
+ 1 . ./libfunction_airhtmatic_opration
+  2
+  3
+  4 clear
+  5 while true
+  6 do
+  7 echo -e "\n\t\t1.Add\n\t\t2.Sub\n\t\t3.Mul\n\t\t4.Div\n\t\t5.exit"
+  8 read -p "Enter Choice (1/2/3/4/5)" choice
+  9
+ 10 case $choice in
+ 11 1) echo "Addition :"
+ 12         add $1 $2
+ 13         ;;
+ 14 2) echo "Sub :"
+ 15         sub $1 $2
+ 16         ;;
+ 17 3) echo "Mul :"
+ 18         mul $1 $2
+ 19         ;;
+ 20 4) echo "Div :"
+ 21         div $1 $2
+ 22         ;;
+ 23 5) exit
+ 24         ;;
+ 25 *) echo "wrong choice"
+ 26 esac
+ 27 done
+
+
+./demosrc_function6 32 8  #(execute like this)
+
+
+
+
+vi libfunction_airhtmatic_opration
+ add()
+  2 {
+  3         expr $1  + $2
+  4 }
+  5
+  6 sub()
+  7 {
+  8         expr $1 - $2
+  9 }
+ 10
+ 11 mul()
+ 12 {
+ 13         expr $1 \* $2
+ 14 }
+ 15
+ 16 div()
+ 17 {
+ 18         expr $1 / $2
+ 19 }
+
+
+
+Debugger 
+---------
+
+v - verbose
+x - execute mode
+
+set -vx
+if [ ]
+then
+	----
+	----	
+	---
+fi
+
+set +vx
+
+
+
+
+Array:
+-------
+
+
+
+num_arr=(2 4 6 8)
+echo ${num_arr[2]}
+
+
+
+
+Taking array inputs from user and make addition of them
+
+1 # array demo
+  2
+  3 clear
+  4 i=0
+  5 ans='y'
+  6 while [ $ans != 'n' ]
+  7 do
+  8         read -p "Enter value" no
+  9         arr[$i]=$no
+ 10         i=`expr $i + 1`
+ 11         read -p "Wish to add more ?" ans
+ 12 done
+ 13 len=`echo ${#arr[@]}`
+ 14 i=0
+ 15 sum=0
+ 16
+ 17 # loop for display & calculate sum
+ 18
+ 19 while [ $i -lt $len ]
+ 20 do
+ 21         echo "Value : ${arr[$i]}"
+ 22         no=`echo ${arr[$i]}`
+ 23         sum=`expr $sum + $no`
+ 24         i=`expr $i + 1`
+ 25 done
+ 26
+ 27 echo "Sum of Elements :  $sum"
+
+
+O/P #=>
+Enter value11
+Wish to add more ?y
+Enter value20
+Wish to add more ?y
+Enter value34
+Wish to add more ?n
+Value : 11
+Value : 20
+Value : 34
+Sum of Elements :  65
+
+
+
+
+
+
+EXERCISE: - WRITE SCRIPT DESIGN FOLLOWING MENU :
+
+	1. Check Login
+	2. Check User
+	3. User Process
+	4. Report Generation	
+	5. Exit
+
+If 1st choice is given then script schold accept login/user name from the user to be checked.
+Check if the given login exixts in the current envirnment.
+
+If 2nd choice --> Accept login/user name. Check 
+Weather the given user has logged in or not. Display
+message accordongly.
+
+If 3rd choice --> Accept user/Login name. Find out how (ps -ef)
+many processed are started and running for that user.
+Display the count
+
+If 4th choice --> Using awk generate the following 
+report and display it by running awk command from
+script itself
+
+Login Name:		Default Shell:
+
+No. Of Hours:
+
+Current Processes:
+	
+	S. No.		Process Names
+	1		---		
+	;		---
+	:		---
+
+
+If 5th choice --> script should exit
+
+Use functions for 1-3 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,500 @@
+Shell & Shell Basics :
+
+* Shell Features :
+
+1) cmd features
+2) cmd piping (|)
+3) cmd grouping (; () )
+4) command substituation -
+5) I/O Redirection
+
+* Shell Environment:
+1) configuration Files (sh ksh csh bash)
+2) shell variables
+
+
+1) configuration Files (sh ksh csh bash):-
+----------------------------------------------------------------------------------------------------
+
+				sh 		ksh		csh 		bash	
+cmd history			N/A		A		A		A
+						.history	.history	.bashhistory
+----------------------------------------------------------------------------------------------------
+
+cmd editing			N/A		N/A		A		A
+----------------------------------------------------------------------------------------------------
+
+Configuration files								.bashprofile
+				.profile	.profile	.login		.bashrc
+				.rc		.kshrc		.cshrc
+----------------------------------------------------------------------------------------------------
+
+2) shell variables:
+
+a) Built-in 
+$0,$1,$$,$*,$@,$!,$.
+
+
+[bs15@qeserver ~]$ echo $0
+bash
+[bs15@qeserver ~]$ echo $1
+
+[bs15@qeserver ~]$ echo $$
+15092
+[bs15@qeserver ~]$ ps
+  PID TTY          TIME CMD
+14897 pts/20   00:00:00 bash
+14929 pts/20   00:00:00 bash
+15092 pts/20   00:00:01 bash
+24761 pts/20   00:00:00 ps
+
+[bs15@qeserver ~]$ set welcome hello 100 200 300
+[bs15@qeserver ~]$ echo $_
+300
+
+[bs15@qeserver ~]$ echo $1
+welcome
+
+[bs15@qeserver ~]$ echo $2
+hello
+
+[bs15@qeserver ~]$ echo $3
+100
+
+[bs15@qeserver ~]$ echo $4
+200
+
+[bs15@qeserver ~]$ echo $5
+300
+
+[bs15@qeserver ~]$ echo $#
+5
+
+[bs15@qeserver ~]$ echo $@
+welcome hello 100 200 300
+
+[bs15@qeserver test_dir]$ echo $?
+0
+
+[bs15@qeserver test_dir]$ echo $#
+5
+
+[bs15@qeserver test_dir]$ shift
+
+[bs15@qeserver test_dir]$ echo $#
+4
+
+[bs15@qeserver test_dir]$ echo $1
+hello
+
+[bs15@qeserver test_dir]$ echo $@
+hello 100 200 300
+
+[bs15@qeserver test_dir]$ shift
+[bs15@qeserver test_dir]$ echo $1
+100
+
+[bs15@qeserver test_dir]$ echo $@
+100 200 300
+
+
+b) Environmenrt:
+
+[bs15@qeserver test_dir]$ echo $SHELL
+/bin/bash
+
+[bs15@qeserver test_dir]$ echo $HOME
+/home/bs15
+
+[bs15@qeserver test_dir]$ echo $HISTSIZE
+1000
+
+[bs15@qeserver test_dir]$ echo $LOGNAME
+bs15
+
+
+c) User-Defined:
+
+[bs15@qeserver test_dir]$ name="rahul"
+
+[bs15@qeserver test_dir]$ echo $name
+rahul
+
+[bs15@qeserver test_dir]$ x=100
+
+[bs15@qeserver test_dir]$ y = 200   (For assignment do not use space)
+bash: y: command not found
+
+
+
+
+---------------------------------------------------------------------------------------
+
+Airthmetic Oprations:
+
+[bs15@qeserver test_dir]$ exper $x+$name
+bash: exper: command not found
+
+[bs15@qeserver test_dir]$ exper $x+$HISTSIZE
+bash: exper: command not found
+
+[bs15@qeserver test_dir]$ expr $x+$HISTSIZE
+100+1000
+
+[bs15@qeserver test_dir]$ expr $x + $HISTSIZE
+1100
+
+[bs15@qeserver test_dir]$ expr $x / $HISTSIZE
+0
+
+[bs15@qeserver test_dir]$ expr $x * $HISTSIZE
+expr: syntax error
+
+[bs15@qeserver test_dir]$ expr $x \* $HISTSIZE
+100000
+
+[bs15@qeserver test_dir]$ bc -l
+bc 1.06
+Copyright 1991-1994, 1997, 1998, 2000 Free Software Foundation, Inc.
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type `warranty'.
+echo $x
+(standard_in) 1: illegal character: $
+(standard_in) 1: parse error
+z=200
+a=90
+z/y
+Runtime error (func=(main), adr=5): Divide by zero
+z/a
+2.22222222222222222222
+scale=2
+z/a
+2.22
+
+
+[bs15@qeserver test_dir]$ x=13
+[bs15@qeserver test_dir]$ y=2
+[bs15@qeserver test_dir]$ echo "$x/$y"
+13/2
+[bs15@qeserver test_dir]$ echo "$x/$y" | bc -l
+6.50000000000000000000
+[bs15@qeserver test_dir]$ echo "scale=2;$x/$y" | bc -l
+6.50
+[bs15@qeserver test_dir]$ x=12.5
+[bs15@qeserver test_dir]$ y=30.2
+[bs15@qeserver test_dir]$ echo "scale=2;$x+$y" | bc -l
+42.7
+[bs15@qeserver test_dir]$ z=
+[bs15@qeserver test_dir]$ z=
+[bs15@qeserver test_dir]$ z=echo "scale=2;$x+$y" | bc -l
+bash: scale=2;12.5+30.2: command not found
+[bs15@qeserver test_dir]$ z=`echo "scale=2;$x+$y" | bc -l`
+[bs15@qeserver test_dir]$ echo $z
+42.7
+[bs15@qeserver test_dir]$
+
+
+
+[bs15@qeserver test_dir]$ let z=x+y
+bash: let: 12.5: syntax error: invalid arithmetic operator (error token is ".5")
+[bs15@qeserver test_dir]$ let z=a+b
+[bs15@qeserver test_dir]$ echo $z
+0
+[bs15@qeserver test_dir]$ x=89
+[bs15@qeserver test_dir]$ y=2
+[bs15@qeserver test_dir]$ let z=a+b
+[bs15@qeserver test_dir]$ echo $z
+0
+[bs15@qeserver test_dir]$ let z=x+y
+[bs15@qeserver test_dir]$ echo $z
+91
+[bs15@qeserver test_dir]$
+
+
+
+[bs15@qeserver test_dir]$ sh
+sh-3.2$ chsh
+Changing shell for bs15.
+Password:
+New shell [/bin/bash]: /bin/sh
+Shell changed.
+sh-3.2$ egrep "root" /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+operator:x:11:0:operator:/root:/sbin/nologin
+sh-3.2$
+
+
+		
+
+[bs15@qeserver exersice]$ date;ll
+Tue Jul 22 13:33:26 IST 2014
+total 8
+-rw-rw-r-- 1 bs15 bs15  99 Jul 22 12:11 awkdb_product
+-rw-rw-r-- 1 bs15 bs15 530 Jul 22 13:16 awksrc1_product
+
+
+echo "Today is `date +%A`"
+Today is Tuesday
+
+
+[bs15@qeserver exersice]$ echo "Current Directory : `pwd`"
+Current Directory : /home/bs15/test_dir/exersice
+
+
+
+
+[bs15@qeserver exersice]$ echo -e "\n\nHello"     (-e escase sequence)
+
+
+Hello
+[bs15@qeserver exersice]$
+
+
+[bs15@qeserver exersice]$ echo  -e "welcome : \c"    (\c keep cursor on same line)
+welcome : [bs15@qeserver exersice]$
+
+
+
+
+
+[bs15@qeserver scripts]$ cls
+-bash: cls: command not found
+
+[bs15@qeserver scripts]$ alias cls='clear'
+
+[bs15@qeserver scripts]$ cls
+
+
+[bs15@qeserver scripts]$ l
+
+-bash: l: command not found
+
+[bs15@qeserver scripts]$ alias l='ls -l'
+
+[bs15@qeserver scripts]$ l
+total 4
+-rw-rw-r-- 1 bs15 bs15 109 Jul 22 14:58 demoscr
+
+[bs15@qeserver scripts]$
+
+
+[bs15@qeserver scripts]$ unalias cls
+[bs15@qeserver scripts]$ cls
+-bash: cls: command not found
+[bs15@qeserver scripts]$
+
+
+
+
+Shell scripting .................
+
+
+
+
+ # This is demo script
+  2
+  3
+  4
+  5 echo "Enter Directory Name : "
+  6 read dname
+  7 echo "Contetnts of Directory : "
+  8 ls $dname
+
+
+
+
+
+chmod u+x demoscr
+
+
+./demosrc
+
+......................................................................................................
+
+Exercise : Write script which accepts file name and show content and no. of lines 
+
+
+
+ demosrc1
+
+ echo "Enter  File Name : "
+  2   read fname
+  3   echo "File Contetnts are : "
+  4   cat $fname
+  5   echo  "Total no. of line in file are:"
+  6   wc -l < $fname
+
+
+
+chmod u+x demoscr
+
+./demosrc1
+
+
+O/P =>
+
+[bs15@qeserver scripts]$ ./demoscr1
+Enter  File Name :
+employee
+File Contetnts are :
+e0016:ashu:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+Total no. of line in file are:
+8
+[bs15@qeserver scripts]$
+
+
+......................................................................................................
+
+
+ #!/bin/sh   (shibang line ) (shell environment will create and execute it)
+  2 echo "Enter  File Name : "
+  3   read fname
+  4   echo "File Contetnts are : "
+  5   cat $fname
+  6   echo  "Total no. of line in file are:"
+  7   wc -l < $fname
+
+
+
+then you can execute it with 
+sh filename
+
+
+......................................................................................................
+
+
+Operators :
+	* Math - 		[+ - * / %] 
+	* Relational 	-numeric 	[gt lt ge le eg ne ]
+			-string 	[<space>=<space> , != , ]
+
+	* Logical 	[and or]
+
+File Operators:
+	-e  -- exists
+	-f  -- exists and regular file
+	-d  -- exixts and directory
+	-r  -- exixts and readable
+	-w  -- exixts and writtable
+	-x  --  exixts and executable
+	-s  -- exixts and empty file
+
+
+
+Control Statements :
+	Conditional and loop
+
+	conditioanle : [if ..fi] [case.. esac]
+
+	Simple if:	
+	
+		if test condition
+		then 	
+			#true
+		else
+			#false
+		fi
+
+
+
+	multiple if:
+		if test condition
+		then 	
+			#true
+		else if test condition
+		then
+		.	#true
+		.
+		.
+		.
+		else
+			#false
+		fi
+		fi
+
+	** if you are usinf el if instead of else if then fi is not required.
+
+
+
+
+
+#!/bin/sh
+  2 echo "Enter  File Name : "
+  3   read fname
+  4   # checking existance of a file
+  5   #if test -f $fname
+      if [-f $fname ]	
+  6   then
+  7           echo "File Contetnts are : "
+  8           cat $fname
+  9           echo  "Total no. of line in file are:"
+ 10           wc -l < $fname
+ 11  else
+ 12         echo "File not found...!"
+ 13  fi
+
+
+
+
+
+
+EXERSICE - Take 2 files as an I/P and display smaller and greater on the basis of no. of line count.
+
+  1 #!/bin/sh
+  2   echo "Enter  First File Name : "
+  3   read fname1
+  4   echo "Enter  second File Name : "
+  5   read fname2
+  6
+  7   # checking existance of a file
+  8   #if test -f $fname
+  9   if [ -f $fname1 -a -f $fname2 ]
+ 10   then
+ 11           f1_count=`wc -l < $fname1`
+ 12           f2_count=`wc -l < $fname2`
+ 13
+ 14   else
+ 15         echo "Check given file name that might not exists"
+ 16   fi
+ 17
+ 18   if [ $f1_count -gt $f2_count ]
+ 19   then
+ 20         echo "First file - $fname1 ($f1_count) is greater than second $fname2 ($f2_count)"
+ 21   elif [ $f1_count -eq $f2_count ]
+ 22   then
+ 23         echo "Both files having same no. of lines."
+ 24   else
+ 25         echo "First file - $fname1 ($f1_count) is smaller than second $fname2 ($f2_count)"
+ 26         #echo "Second file is grater than first"
+ 27
+ 28  fi
+
+
+
+
+
+
+
+
+
+
+
+
+sh 
+
+
+
+
+
+
+	
+
+
+ 

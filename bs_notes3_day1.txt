@@ -1,0 +1,1074 @@
+Commands take INPUT but not give OUTPUT 
+chfn 
+passwd
+read
+
+
+Commands do Not take INPUT but give OUTPUT 
+ls 
+finger
+date
+pwd
+top
+ps
+uname
+top
+more
+less
+who
+whomi
+
+
+
+
+Commands take INPUT and give OUTPUT 
+cat
+head
+tail
+wc
+sort
+grep
+
+
+
+
+Commands do not take INPUT not give OUTPUT 
+set
+chmod
+mkdir
+cp 
+mv
+rm
+rmdir
+
+
+Filters:
+----------
+
+cat -n employee (display with numbers on cmd)
+
+more /etc/password (b-backword , f-forward) 	
+less /etc/password (b-backword , f-forward) 	
+
+
+head /etc/password (by default 10 line)
+
+head 5 /etc/password 
+
+head -5 /etc/password 
+
+tail 5 /etc/password
+
+
+tail -5 /etc/password 
+
+
+
+
+wc employee 
+
+line words characters 
+
+wc file1 file2
+
+wc -l < employee
+
+wc -lc < employee
+
+wc -wlc < employee
+
+
+EXERCISE 1 Command Piping: Inter process commands:
+-------------------------------------------
+Get count of number of users loged in:
+1.	who > file1
+	wc -l < file1
+
+2.	Pipe (No need to create temp file)
+	who | wc -l
+
+-------------------------------------------
+
+Requires 2 commands just like (sender <--> receiver)
+
+
+
+
+file employee
+
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+e001:anil:lead:20000
+e0016:harshal:prog:56000
+
+
+
+
+
+cut -d":" -f2,4 employee    (d is delimeter in file , -f column number)
+cut -d":" -f2-4 employee    (range 2-4)
+
+cut -d":" -f1 employee
+
+cut -d":" -f1 employee | cut -c2-
+
+
+EXERCISE 2 - Get user name from pwd command
+-------------------------------------------
+1. pwd | cut -d"/" -f3
+
+2. pwd | cut -c7-10
+
+
+-------------------------------------------
+
+
+EXERCISE 3 - Get username and time out of who command output
+-------------------------------------------
+who | tr -s " "  | cut -d " " -f1,4
+
+-------------------------------------------
+
+
+
+
+
+
+tr ":" "-" < employee  (Translate : to -)
+
+
+tr "[a-z]" "[A-Z]" < employee
+
+
+tr -d "e" < employee (-d delete)
+
+who | tr -s " "  (-s squezee)
+
+
+
+
+-------------------------------------------
+EXERCISE 4 - Cut permission and file name column from ls -l
+-------------------------------------------
+ls -l| tr -s " " | cut -d " " -f 1,9
+-------------------------------------------
+
+
+
+sort 
+-----
+
+sort (ascii value sorting)
+
+sort -n (numeric value)	
+
+
+sort -nr (numeric/reverse) order
+
+
+sort -t":" -k4 employee
+
+
+sort -t":" -r -k4 employee
+
+sort -t":" -r -k4 employee > sort_employee   (-k sorting on column)
+
+
+sort -t":" -r -k4 -o employee employee (get sorted output got replace with existing.)
+
+
+-------------------------------------------------------------------------------------------------
+EXERCISE 4 : Find out first biggest 5 interms of size and display only name and size:
+-------------------------------------------------------------------------------------------------
+
+ls -l | tr -s " " 
+
+ls -l | tr -s " " | cut -d " " -f5,9
+
+ls -l | tr -s " " | cut -d " " -f5,9 | sort -nr -k1
+
+-------------------------------------------------------------------------------------------------
+
+**********************************************************************************************************************************************************w
+
+
+unique: (but require sorted order content)
+
+file employee:
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+
+commands: 
+
+ uniq employee
+ sort -o employee employee
+
+   
+ uniq -d employee (show only duplicated )
+
+ uniq -u employee (show only unique )
+
+ uniq -c employee (show count of occurence )
+
+
+-------------------------------------------------------------------------------------------------
+EXERCISE 4 : Find out users loged in count with unique:
+-------------------------------------------------------------------------------------------------
+ 	who | tr -s " " | cut -d " " -f1 | uniq -c
+-------------------------------------------------------------------------------------------------
+
+
+**********************************************************************************************************************************************************w
+paste command :
+
+cat > names
+ravi
+radha
+omkar
+vighnesh
+
+
+[bs15@qeserver test_dir]$ cat > city
+pune
+mumbai
+nagpur
+kolhapur
+
+
+[bs15@qeserver test_dir]$ paste names city
+ravi    pune
+radha   mumbai
+omkar   nagpur
+vighnesh        kolhapur
+
+
+**********************************************************************************************************************************************************w
+
+cp and cmp commands:
+
+
+cp names names1
+
+
+cmp names names1
+
+
+diff names names1
+1c1
+<  ravi
+---
+> ravi
+
+
+cat names
+ ravi
+radha
+omkar
+vighnesh
+
+
+cat names1
+anand
+ravi
+radha
+vighnesh
+
+
+ diff names names1
+1c1,2
+<  ravi
+---
+> anand
+> ravi
+3d3
+< omkar
+
+
+
+O/P #=> a -- append
+        d -- delete
+        c -- change
+
+
+
+
+**********************************************************************************************************************************************************w
+
+
+
+grep - Globally search for Regular Expression and Print 
+
+grep "pattern" file(s)
+
+grep -w "shell" new_file
+
+ grep  -w '[Ss]hell' new_file
+
+grep -wi "shell" new_file   (ignore case)
+
+^ begening with
+
+$ ends with
+
+[-] - range
+
+[ ] - selection
+
+\ - negiation
+
+. - replace with
+
+* - no. of occurance
+
+Drawbacks:
+
+Search but can't modify
+Can't search multiple @ a time 
+Can't do line addressing and column addressing 
+
+
+
+
+
+ERE - extended regular expression (supported by grep) -  (grep -E )
+
+
+ERE metacharacters - 
+
++ prev. char | or more time
+
+? prev char. or 1 time
+
+.
+
+|
+
+{} 
+
+BRE matchcharacters - 
+
+
+
+
+
+finding 
+
+gargi , gaargi , gaaargi
+
+cat sample
+gargi
+gaargi
+gaaargi
+
+[bs15@qeserver test_dir]$ egrep "gaa*rgi" sample
+gargi
+gaargi
+gaaargi
+
+[bs15@qeserver test_dir]$ egrep "gaa?rgi" sample
+gargi
+gaargi
+
+egrep "gaa{1}rgi" sample
+gaargi
+
+ egrep "gaa{5}rgi" sample
+[bs15@qeserver test_dir]$ egrep "gaa{1,5}rgi" sample
+gaargi
+gaaargi
+
+egrep "gaa+rgi" sample
+gaargi
+gaaargi
+
+
+
+egrep -c "shell" test
+2
+
+[bs15@qeserver test_dir]$ egrep -n "shell" test
+3:bash shell scripting
+6:shell acts as a interface for users.
+
+[bs15@qeserver test_dir]$ egrep -v "shell" test
+rahul patil
+address
+It's just started now ...!
+come  & join us ...!
+figer is one of the linux command .
+et indent
+fi
+
+if( )
+{
+}
+
+
+
+
+
+
+cat employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+egrep -l "^e0016" employee sort_employee
+employee
+sort_employee
+
+
+
+^[0-9] 
+
+grep "\!$" test
+
+grep "\.$" test
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+a - sort -t ":" -k2 student_list
+
+b -  sort -t ":" -k1 student_list > sortdata
+
+c - sort -nr -t ":" -k3 student_list
+
+
+d - cut -d ":" -f2,5 student_list
+
+
+e - cut -d ":" -f 2 student_list | grep "55"  
+
+f-  cut -d":" -f2,3 student_list | egrep "8[1-9]|9[0-9]"
+   
+
+
+Q - Find how many ordinary files are present in your current directory?
+
+A - ls -l| tr -s " " | cut -d " " -f 2 | grep -c "1"
+
+ll | grep -c "^-"
+
+
+
+
+**********************************************************************************************************************************************************w
+
+sed : Overwrite drawbacks of grep and egrep
+1) Allow multiple pattern search 
+2) search and modufy
+3) alow field addressing
+
+sed "line no command" file
+
+sed "/pattern/command" file
+
+p - print
+w - write
+i - insert
+d - delete
+s- set/substitute
+
+-n desired o/p 
+
+
+have holdspace take stdin and outs stdout
+
+have patternspace 
+
+Line Addressing :
+
+[bs15@qeserver test_dir]$ sed "2p" employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+[bs15@qeserver test_dir]$ sed -n "2p" employee
+e0016:harshal:prog:56000
+
+[bs15@qeserver test_dir]$ sed -n "2w data" employee
+
+[bs15@qeserver test_dir]$ cat data
+e0016:harshal:prog:56000
+
+[bs15@qeserver test_dir]$ sed "2w data" employee
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+[bs15@qeserver test_dir]$ cat data
+e0016:harshal:prog:56000
+
+Pattern Addressing:
+
+[bs15@qeserver test_dir]$ sed -n "/rahul/p" employee
+e005:rahul:comp:45000
+
+
+ sed -n "/56000$/p" employee
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+
+
+
+ sed "2iHEllo" employee  (inserts into 2 line location)
+
+
+
+HEllo
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+
+
+
+[bs15@qeserver test_dir]$ sed "2aHEllo" employee (a - append)
+
+e0016:harshal:prog:56000
+HEllo
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+
+
+[bs15@qeserver test_dir]$ sed -n "6d" employee
+
+[bs15@qeserver test_dir]$ cat employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+[bs15@qeserver test_dir]$ sed "6d" employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+
+
+
+[bs15@qeserver test_dir]$ sed "/^e005/d" employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+[bs15@qeserver test_dir]$ sed "/rahul/d" employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+
+[bs15@qeserver test_dir]$ sed "/rahul/d" employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+
+[bs15@qeserver test_dir]$ sed "s/comp/COMP/" employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:COMP:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+
+[bs15@qeserver test_dir]$ sed "/rahul/s/comp/COMP/" employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:COMP:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+[bs15@qeserver test_dir]$
+
+
+sed "s/a/X/" employee   (replaces only first occurence from line)
+
+e0016:hXrshal:prog:56000
+e0016:hXrshal:prog:56000
+e0016:hXrshal:prog:56000
+e0016:hXrshal:prog:56000
+e001:Xnil:lead:20000
+e005:rXhul:comp:45000
+e008:prXnita:accts:30000
+e009:Xmol:sales:16000
+
+
+[bs15@qeserver test_dir]$ cat employee
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+e001:anil:lead:20000
+e005:rahul:comp:45000
+e008:pranita:accts:30000
+e009:amol:sales:16000
+
+[bs15@qeserver test_dir]$ sed "s/a/X/g" employee  (/g replaces for all occurances)
+
+e0016:hXrshXl:prog:56000
+e0016:hXrshXl:prog:56000
+e0016:hXrshXl:prog:56000
+e0016:hXrshXl:prog:56000
+e001:Xnil:leXd:20000
+e005:rXhul:comp:45000
+e008:prXnitX:Xccts:30000
+e009:Xmol:sXles:16000
+[bs15@qeserver test_dir]$
+
+e009:amol:sales:16000
+[bs15@qeserver test_dir]$
+
+
+Mulptiple pattern with sed:
+
+-2p Print 
+-e extented  (search)
+
+sed -n -e "2p" -e "/pranita/w data" -e "1,3w data2" employee
+e0016:harshal:prog:56000
+
+
+[bs15@qeserver test_dir]$ cat data
+e008:pranita:accts:30000
+[bs15@qeserver test_dir]$ cat data2
+
+e0016:harshal:prog:56000
+e0016:harshal:prog:56000
+[bs15@qeserver test_dir]$
+
+
+
+
+Below is sample file: 
+
+[bs15@qeserver test_dir]$ cat employee_information
+1109|amol|g.m|accountant|12/12/10|60000
+2390|anil|d.g.m|sales|10/09/90|45000
+3445|anuj|director|account|31/2/78|23000
+9834|omkar|executive|marketing|23/4/90|34000
+7687|abhijit|g.m|admin|3/3/90|56000
+5665|anand|chairman|marketing|30/4/12|37000
+3443|jayant|director|account|24/5/90|78000
+7775|amogh|d.g.m|sales|13/4/78|23900
+
+EXERSICE - a) From above db substitude the delimeter of first 3 lines with ":" 
+
+[bs15@qeserver test_dir]$ sed "1,3s/|/:/g" employee_information
+1109:amol:g.m:accountant:12/12/10:60000
+2390:anil:d.g.m:sales:10/09/90:45000
+3445:anuj:director:account:31/2/78:23000
+9834|omkar|executive|marketing|23/4/90|34000
+7687|abhijit|g.m|admin|3/3/90|56000
+5665|anand|chairman|marketing|30/4/12|37000
+3443|jayant|director|account|24/5/90|78000
+7775|amogh|d.g.m|sales|13/4/78|23900
+
+
+EXERSICE - b) From above db substitude the delimeter ":" 
+sed "s/|/:/g" employee_information
+
+
+EXERSICE - c) Insert the string "Hello Employee" in first line.
+sed "1iHello Employee" employee_information
+
+EXERSICE - d) Store line partaining to the director,g.m,d.g.m into three seprate files
+
+sed -n -e "/|g.m./w extract_file_for_gm" -e "/|d.g.m./w extract_file_for_dgm" -e "/director/w extract_file1" employee_information
+	
+
+
+Exercise e) using adress, store first 4 lines a file empupdate.
+
+sed "1,4 w empupdate" employee_information
+
+Exercise f) Find the pattern "account" in db and replace that with accounts
+sed "s/account/accounts/" employee_information
+
+Exersice g) select those lines which do not have a pattenr "g.m"
+
+sed -e "/|g.m/d" employee_information  > employee_extracted_gm
+
+
+
+
+**********************************************************************************************************************************************************w
+
+
+876
+09/17
+
+
+awk filter:
+-------------
+a- aho
+w- weinberger
+k- keringhan
+
+awk '{action}' file
+
+awk /---/ {action} file
+
+
+Builtin veriables
+
+$0 --> current record
+$1 --> 1st field
+$1 --> 2nd field
+
+.
+.
+.
+.
+NR - No of record
+NF - Number of field
+
+File Name - Current file
+
+FS - field seprator
+ARGC - arg count
+ARGV - arg value
+
+
+
+
+ awk -F":" '{print $2,$4}' employee
+harshal 56000
+harshal 56000
+harshal 56000
+harshal 56000
+anil 20000
+rahul 45000
+pranita 30000
+amol 16000
+
+
+
+[bs15@qeserver test_dir]$ awk -F":" '{printf("%s%d" ,$2,$4)}' employee
+harshal56000harshal56000harshal56000harshal56000anil20000rahul45000pranita30000amol16000[bs15@qeserver test_dir]$ awk -F":" '{printf("\t%s%d" ,$2,$4)}' employee
+        harshal56000    harshal56000    harshal56000    harshal56000    anil20000       rahul45000  pranita30000     amol16000
+
+[bs15@qeserver test_dir]$ awk -F":" '{printf("\t%s\t%d" ,$2,$4)}' employee
+        harshal 56000   harshal 56000   harshal 56000   harshal 56000   anil    20000   rahul   45000pranita 30000   amol    16000
+
+[bs15@qeserver test_dir]$ awk -F":" '{printf("\t%s\t%d\n" ,$2,$4)}' emplee      harshal 56000
+        harshal 56000
+        harshal 56000
+        harshal 56000
+        anil    20000
+        rahul   45000
+        pranita 30000
+        amol    16000
+[bs15@qeserver test_dir]$
+
+
+Formated + pattern :
+
+awk -F":" '/comp/{printf("\t%s\t%d\n" ,$2,$4)}' employee
+        rahul   45000
+
+
+
+[bs15@qeserver test_dir]$ awk -F":" '{if($3 == "comp") printf("\t%s\t%d\n" ,$2,$4)}' employee
+        rahul   45000
+[bs15@qeserver test_dir]$
+
+
+BEGIN { headers / }
+
+END { footers/grand total/}
+
+
+
+
+
+[bs15@qeserver test_dir]$ awk -F":" 'BEGIN{printf("\n\tName\t\tDept\t\tSal");}{printf("\n\t%s\t\t%s\t\t%d\n" ,$2,$3,$4);}' employee
+
+        Name            Dept            Sal
+        harshal         prog            56000
+
+        harshal         prog            56000
+
+        harshal         prog            56000
+
+        harshal         prog            56000
+
+        anil            lead            20000
+
+        rahul           comp            45000
+
+        pranita         accts           30000
+
+        amol            sales           16000
+
+
+
+----------------------------------------------------------------
+
+[bs15@qeserver test_dir]$ awk -F":" 'BEGIN{printf("\n\tName\t\tDept\t\tSal");}{if(NR==2)printf("\n\t%s\t\t%s\t\t%d\n" ,$2,$3,$4);}' employee
+
+        Name            Dept            Sal
+        harshal         prog            56000
+[bs15@qeserver test_dir]$ awk -F":" 'BEGIN{printf("\n\tName\t\tDept\t\tSal");}{if(NR==2 || NR ==5)printf("\n\t%s\t\t%s\t\t%d\n" ,$2,$3,$4);}' employee
+
+        Name            Dept            Sal
+        harshal         prog            56000
+
+        anil            lead            20000
+[bs15@qeserver test_dir]$
+
+
+
+
+
+
+
+
+[bs15@qeserver test_dir]$ awk -F":" -f awksr employee  (first file awtsr)
+
+
+ Employee Report
+                Name    Dept    Sal
+                ashu    prog    56000
+                harshal prog    56000
+                harshal prog    56000
+                harshal prog    56000
+                anil    lead    20000
+                rahul   comp    45000
+                pranita accts   30000
+                amol    sales   16000
+----------------------------------------------------------------
+
+
+ BEGIN{
+  2         system("clear");
+  3         printf("\n\t\tDate :");
+  4         system("date +'%d %B %y'");
+  5         printf("\n\t\tEmployee Report");
+  6         printf("\n\t\tName\tDept\tSal\n");
+  7      }
+  8
+  9 {
+ 10         printf("\t\t%s\t%s\t%d\n",$2,$3,$4);
+ 11 }
+
+
+
+Date :22 July 14
+
+                Employee Report
+                Name    Dept    Sal
+                ashu    prog    56000
+                harshal prog    56000
+                harshal prog    56000
+                harshal prog    56000
+                anil    lead    20000
+                rahul   comp    45000
+                pranita accts   30000
+                amol    sales   16000
+[bs15@qeserver test_dir]$ awk -F":" -f awksr employee
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+awk  -v dept="prog" -v name="ashu" -f awksr employee
+
+ Date :22 July 14
+
+                Employee Report
+                Name    Dept    Sal
+                ashu    prog    56000
+
+                Totatl Salary : 56000
+
+
+
+
+
+BEGIN{
+  2         system("clear");
+  3         printf("\n\t\tDate :");
+  4         system("date +'%d %B %y'");
+  5         printf("\n\t\tEmployee Report");
+  6         printf("\n\t\tName\tDept\tSal\n");
+  7         tot_sal=0;
+  8         FS=":";
+  9      }
+ 10
+ 11         {
+ 12                 if($3==dept && $2==name)
+ 13                 {
+ 14                         printf("\t\t%s\t%s\t%d\n",$2,$3,$4);
+ 15                         tot_sal += $4;
+ 16                 }
+ 17         }
+ 18
+ 19 END {
+ 20
+ 21         printf("\n\t\tTotatl Salary : %d\n",tot_sal);
+ 22     }
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+                Date :22 July 14
+
+                Product Report
+                PCODE   NAMEt   QTY     PRICE   TOT_PRICE
+                101     tv      5       56000   280000
+                78      bike    3       34000   102000
+                456     car     7       78000   546000
+                678     comp    4       29000   116000
+                873     truck   2       98000   196000
+                672     jcb     1       120000  120000
+
+                GRAND TOTAL IS: 1360000
+[bs15@qeserver exersice]$ awk  -f awksrc1_product awkdb_product
+
+
+
+
+[bs15@qeserver exersice]$ vi awksrc1_product
+  1 BEGIN{
+  2         system("clear");
+  3         printf("\n\t\tDate :");
+  4         system("date +'%d %B %y'");
+  5         printf("\n\t\tProduct Report");
+  6         printf("\n\t\tPCODE\tNAMEt\tQTY\tPRICE\tTOT_PRICE\n");
+  7         tot_price=0;
+  8         tot_items=0;
+  9         grand_total=0;
+ 10         FS=":";
+ 11         #prinf("\nArgument count :%d",ARGC);
+ 12         #prinf("\nARG[0]:%s\tARG[1]:%s")
+ 13      }
+ 14
+ 15         {
+ 16
+ 17               tot_total = $3 * $4;
+ 18               tot_items += $3;
+ 19               grand_total += tot_total;
+ 20               printf("\t\t%d\t%s\t%d\t%d\t%d\n",$1,$2,$3,$4,tot_total);
+ 21
+ 22         }
+ 23
+ 24 END {
+ 25
+ 26         printf("\n\t\tGRAND TOTAL IS: %d\n",grand_total);
+ 27     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
